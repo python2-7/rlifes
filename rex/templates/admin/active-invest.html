@@ -1,0 +1,32 @@
+{% extends "layout_admin.html" %}
+{% block title %}Mua bảo hiểm{% endblock %}
+{% block js %}
+{% endblock %}
+{% block main %}
+<div class="row datatables_customer">
+   <div class="col-md-12">
+      <div class="card">
+         <div class="content">
+               <div class="col-md-6 col-md-push-3">
+                  <h3 class="text-center">{{data.customer.email}}</h3>
+                  <form method="post" action="/admin/customer/active-invest-submit/{{data.customer.customer_id}}">
+                    
+                     <div class="form-group ">
+                        <label>Nhập số mua RL</label>
+                        <input type="number" name="package" class="form-control" required="true" />
+                      
+                     </div>
+                     
+                     <div class="text-center">
+                        <button onclick="return confirm('Bạn có chắc chắn với lựa chọn của mình ?')" type="submit" style="margin-top: 10px;width: 120px;" class="btn btn-warning btn-wd btn-fill">Submit</button>
+                     </div>
+                  </form>
+               </div>
+         </div>
+         <!-- end content-->
+      </div>
+      <!--  end card  -->
+   </div>
+   <!-- end col-md-12 -->
+</div>
+{% endblock %}
