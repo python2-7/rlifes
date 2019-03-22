@@ -17,7 +17,8 @@ class History(Document):
         'detail':  unicode,
         'amount': float,
         'status' :  float,
-        'date_added' : datetime.datetime
+        'date_added' : datetime.datetime,
+        'date_profit' : datetime.datetime
     }
     use_dot_notation = True
 

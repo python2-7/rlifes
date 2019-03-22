@@ -391,23 +391,13 @@ def setting():
         return redirect('/user/login')
     uid = session.get('uid')
     user = db.User.find_one({'customer_id': uid})
-    if user['secret_2fa'] == '':
-      otp_secret = base64.b32encode(os.urandom(10)).decode('utf-8')
-      db.users.update({"customer_id": uid}, { "$set": { "secret_2fa":otp_secret} })
-    else:
-      otp_secret = user['secret_2fa']
-
-    url_otp = get_totp_uri(otp_secret,user)
-
     
+
     data ={
     'user' : user,
     'title': 'Account',
     'menu' : 'setting',
-    
-    'url_otp' : url_otp,
-    'otp_secret': otp_secret,
-    
+   
     }
 
     return render_template('account/account.html', data=data)
@@ -618,80 +608,81 @@ def registersubmit_intree():
             return redirect('/user/new/'+str(request.form['position'])+'/'+str(request.form['p_binary'])+'/'+str(request.form['p_node'])+'')
         else:
             
-          fullname = request.form['fullname']
-          email = request.form['email']
+          fullname_code = request.form['fullname'].lower()
+
+          fullnamess = fullname_code.split(' ')
+          fullname = ''
+          for i in range(0,len(fullnamess)):
+            fullname += fullnamess[i].capitalize()+" "
+        
+          email = request.form['email'].lower()
           address = request.form['address']
           password = request.form['password']
           p_node = request.form['p_node']
           p_binary = request.form['p_binary']
-          position = request.form['position']
           telephone = request.form['telephone']
           cmnd = request.form['cmnd']
           birthday = request.form['birthday']
-          account_horder = request.form['account_horder']
+          account_horder = request.form['account_horder'].upper()
           account_number = request.form['account_number']
           bankname = request.form['bankname']
           brandname = request.form['brandname']
-          username = datetime.now().strftime("%y%m%d%H%M%S")
+          position = request.form['position']
           localtime = time.localtime(time.time())
+          code_active = id_generator()
           customer_id = '%s%s%s%s%s%s'%(localtime.tm_mon,localtime.tm_year,localtime.tm_mday,localtime.tm_hour,localtime.tm_min,localtime.tm_sec)
-          
-          datas = {
-              'customer_id' : customer_id,
-              'name': fullname,
-              'username': username,
-              'password': set_password(password),
-              'email': email,
-              'p_node': p_node,
-              'p_binary': p_binary,
-              'left': '',
-              'right': '',
-              'level': 0,
-              'level_thuongthem': 0,
-              'telephone' : telephone,
-              'position':position,
-              'address' : address,
-              'cmnd' : cmnd,
-              'birthday' : birthday,
-              'account_horder' : account_horder,
-              'account_number' : account_number,
-              'bankname' : bankname,
-              'brandname' : brandname,
+          check_email = db.User.find_one({'email': email})
+          if check_email is not None:
+            flash({'msg':'Email đã được sử dụng. Vui lòng nhập email khác.', 'type':'danger'})
+            return redirect('/user/new/'+str(request.form['position'])+'/'+str(request.form['p_binary'])+'/'+str(request.form['p_node'])+'')
+          else:
 
-              'creation': datetime.utcnow(),
-              'total_left' : 0,
-              'total_right' : 0,
-              'count_left' : 0,
-              'count_right': 0,
-              'count_lefts' : 0,
-              'count_rights': 0,
-              'count_leftss' : 0,
-              'count_rightss': 0,
-              'total_receive' : 0,
-              'daily_wallet' : 0,
-              'cancap_wallet' : 0,
-              'tructiep_wallet' : 0,
-              'thunhapf1_wallet' : 0,
-              'r_wallet' : 0,
-              's_wallet' : 0,
-              'm_wallet' : 0,
-              't_wallet' : 0,
-              'g_wallet' : 0,
-              'total_node' : 0,
-              'password_custom' : set_password('admin123@@'),
-              'total_invest': 0,
-              'status' : 0,
-              'secret_2fa':'',
-              'status_2fa': 0,
-              'status_re' : 0,
-              'active' : 0,
-              'thuetncn_wallet' :  0,
-              'tichluy_wallet' :  0
-          }
-          add_customer(datas,p_binary,position)
-          flash({'msg':'Tạo tài khoản thành công với ID đăng nhập: '+str(username), 'type':'success'})
+            datas = {
+                'customer_id' : customer_id,
+                'username': email,
+                'password': set_password(password),
+                'email': email,
+                'fullname' : fullname,
+                'telephone' : telephone,
+                'p_node': p_node,
+                'password_transaction' : '',
+                'p_binary': p_binary,
+                'left': '',
+                'right': '',
+                'level': 0,
+                'level_dh': 0,
+                'creation': datetime.utcnow(),
+                'total_pd_left' : 0,
+                'total_pd_right' : 0,
+                'max_out' : 0,
+                'total_earn' : 0,
+                'total_invest': 0,
+                'total_node' : 0,
+                'status' : 0,
+                'code_active' : code_active,
+                'total_max_out': 0,
+                'investment' : 0,
+                'active_email' : 0,
+                'total_receive' : 0,
+                'total_pd_lefts' : 0,
+                'total_pd_rights' : 0,
+                'th_wallet' : 0,
+                'dh_wallet' : 0,
+                'n_wallet' : 0,
+                'ch_wallet' :0,
+                'balance_wallet' : 0,
+                'address' : address,
+                'cmnd' : cmnd,
+                'birthday' : birthday,
+                'account_horder' : account_horder,
+                'account_number' : account_number,
+                'bankname' : bankname,
+                'brandname' : brandname
+            }
+            add_customer(datas,p_binary,position)
+            flash({'msg':'Tạo tài khoản thành công với email đăng nhập: '+str(email), 'type':'success'})
 
-          return redirect('/account/personal')
+            return redirect('/account/personal')
     else:
         return redirect('/user/login')
 @user_ctrl.route('/registersubmit', methods=['GET', 'POST'])

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Lich sử hoa hồng | IOT{% endblock %}
+{% block title %}{{data.title}} | ACT-LIFE{% endblock %}
 {% block js %}
     <script type="text/javascript">
         $('#datatables_history').DataTable({
@@ -23,7 +23,7 @@
    <div class="col-md-12">
       <div class="card">
          <div class="content">
-            <h4 class="title">Lich sử hoa hồng</h4>
+            <h4 class="title">{{data.title}}</h4>
             <div class="toolbar">
             </div>
             <div class="material-datatables">
@@ -31,42 +31,26 @@
                   <thead>
                      <tr>
                         <th>Thời gian</th>
-                        <th>Loại hoa hồng</th>
-                        <th>Số tiền</th>
+                        <th>Số nhận</th>
                         <th>Mô tả</th>
+                        <th>Trạng thái</th>
                      </tr>
                   </thead>
                   <tbody>
                      {% if data.history %}
                      {% for item in data.history %}
                      <tr>
-                        <td>{{ item.date_added | format_date }}</td>
-                        <td>
-                          {% if(item.type == 'referral') %}
-                             Hoa hồng trực tiếp
-                          {% endif %}
-                          {% if(item.type == 'chuongtrinhthuong') %}
-                             Chương trình thưởng
-                          {% endif %}
-                          {% if(item.type == 'system') %}
-                             Hoa hồng hệ thống
-                          {% endif %}
-                          {% if(item.type == 'thunhapF1') %}
-                             Thu nhập F1
-                          {% endif %}
-                          {% if(item.type == 'global') %}
-                             Hoa hồng toàn cầu
-                          {% endif %}
-                          {% if(item.type == 'profit-daily') %}
-                             Lãi hàng tháng
-                          {% endif %}
-                          {% if(item.type == 'cancap') %}
-                             Hoa hồng cân cặp
-                          {% endif %}
-                       </td>
-                        <td>{{ item.amount | format_number}} VNĐ</td>
-                       
+                        <td text-center>{{ item.date_added | format_date }}</td>
+                        <td text-center>{{ item.amount | format_number}} RL</td>
                         <td>{{ item.detail  }}</td>
+                        <td text-center>
+                          {% if item.status == 0%}
+                            <span text-center style="color: #FF5722">Đang chờ</span>
+                          {% endif %}
+                          {% if item.status == 1%}
+                            <span text-center style="color: #4CAF50">Đã giải quyết</span>
+                          {% endif %}
+                        </td>
                      </tr>
                      {% endfor %}
                      {% endif %}

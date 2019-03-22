@@ -23,18 +23,22 @@
 
         x_p = "<div  class='customer_toolip " + positon[1] + "'>";
         x_p += "<table class='table table-bordered'><tbody><tr>";
-        x_p += "<td colspan='2'> <div align='center'>" + node.username + "</div> </td></tr>";
+        x_p += "<td colspan='2'> <div align='center'>" + node.fullname + "</div> </td></tr>";
         x_p += "<tr><td> <div align='center'>Người bảo trợ</div> </td> <td> <div align='center'>" + node.sponsor + "</div> </td></tr>";
-        x_p += "<tr><td> <div align='center'>Doanh số trái</div> </td> <td> <div align='center'>" + node.leftPD + " VNĐ</div> </td></tr>";
-        x_p += "<tr><td> <div align='center'>Doanh số phải</div> </td> <td> <div align='center'>" + node.rightPD + " VNĐ</div> </td></tr>";
+        x_p += "<tr><td> <div align='center'>Doanh số trái</div> </td> <td> <div align='center'>" + node.leftPD + " RL</div> </td></tr>";
+        x_p += "<tr><td> <div align='center'>Doanh số phải</div> </td> <td> <div align='center'>" + node.rightPD + " RL</div> </td></tr>";
         x_p += "<tr><td> <div align='center'>Ngày tạo</div> </td> <td> <div align='center'>" + node.date_added + " </div> </td></tr>";
         x_p += "";
         x_p += "</tr>";
 
+        //$('#testsssss').append(x_p);
+
         html += !node.empty ?
-            '<div class=\'' + node_class + ' ' + level_active + '\'><a data-html="true" data-toggle="tooltip" rel="tooltip" data-placement="top" data-title="<p>' + x_p + '</p>" class="binaryTree" style="display:block;"   \'><i class="fa fa- type-' + node.active + ' package-111" onclick=\'click_node("' + node.id + '")\' value=\'' + node.id + '\' aria-hidden="true"></i></a><span class="name_node">' + node.username + '<br/> ' + node.name + '</span>' :
-            '<div class=\'' + node_class + '\'><a data-toggle="tooltip" data-placement="bottom" style="display:block" onclick=\'click_node_add("' + node.p_binary + '", "' + positon[1] + '")\' value=\'' + node.p_binary + '\' title="Add new user"><i class="fa fa-plus-square type-add"></i></a><span class="name_node">Tạo thành viên mới</span>';
+            '<div class=\'' + node_class + ' ' + level_active + '\'><a data-html="true" data-toggle="tooltip" rel="tooltip" data-placement="top" data-title="<p>' + x_p + '</p>" class="binaryTree" style="display:block;"   \'><i class="fa fa- icon_user type-' + node.investment + ' package-111" onclick=\'click_node("' + node.id + '")\' value=\'' + node.id + '\' aria-hidden="true"></i></a><span class="name_node">' + node.fullname + '<br/> ' + node.email + '</span>' :
+            '<div class=\'' + node_class + '\'><a data-toggle="tooltip" data-placement="bottom" style="display:block" onclick=\'click_node_add("' + node.p_binary + '", "' + positon[1] + '")\' value=\'' + node.p_binary + '\' ><i class="fa fa-plus-square type-add"></i></a>';
         // : '<div class=\''+node_class+'\'><a data-toggle="tooltip" data-placement="bottom" style="display:block"  title=""><i class="fa fa-plus-square type-add"></i></a>';
+
+
 
         html += '<div id=\'' + node.id + '\' ></div>';
 
@@ -54,6 +58,9 @@
     jQuery.fn.show_infomation = function(node) {
 
     };
+
+
+
     jQuery.fn.build_tree = function(id, method) {
         /*$.getJSON("http://0.0.0.0:8069/json_tree", function(json_data) {
             var rootnode = json_data[0];

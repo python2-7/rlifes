@@ -64,9 +64,13 @@ function showNotification(from, align, msg, type) {
    <div class="col-md-12">
       <div class="card">
          <div class="content">
+          <a style="margin-bottom: 10px;" href="/admin/commission-calculation-system" class="pull-right">
+              <button type="button" class="btn btn-success">Tính hoa hồng</button>
+            </a>
+            <div class="clearfix"></div>
             <h4 class="title">Hoa hồng cân cặp</h4>
           
-            
+              
   <div class="col-md-8">
                <div class="input-group input-daterange">
                   <input type="text" id="min-date" class="form-control date-range-filter" data-date-format="yyyy-mm-dd" placeholder="Từ ngày :">
@@ -89,7 +93,7 @@ function showNotification(from, align, msg, type) {
                         <th>Số tiền</th>
 
                         <th>Mô tả</th>
-                        <!-- <th>Trạng thái</th> -->
+                        <th>Trạng thái</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -97,23 +101,20 @@ function showNotification(from, align, msg, type) {
                      {% for item in data.history %}
                      <tr>
                         <td>{{ item.date_added | format_date }}</td>
-                        <td><a href="/admin/customer/imfomation/{{ item.customer_id}}">{{ item.username}}</a></td>
+                        <td><a href="/admin/customer/imfomation/{{ item.uid}}">{{ item.username}}</a></td>
                         <td>{{ item.fullname }}</td>
                         <td>{{ item.amount | format_number}}</td>
                         
                         
                         <td>{{ item.detail  }}</td>
-                        <!-- <td>
-                        {% if(item.status == 1) %}
-                            <span class="label label-success">Đã  thanh toán</span>
-                        {% endif %}
-                        {% if(item.status == 0) %}
-                          <a onclick="return confirm('Bạn có chắc chắn với lựa chọn của mình ?')" href="/admin/update-history-thunhapf1/{{ item._id  }}">
-                            <span class="label label-danger">Xác nhận thanh toán</span>
-                          </a>
-                        {% endif %}
-                        
-                        </td> -->
+                        <td >
+                          {% if item.status == 0%}
+                            <span text-center style="color: #FF5722">Đang chờ</span> - {{ item.date_profit | format_date}}
+                          {% endif %}
+                          {% if item.status == 1%}
+                            <span text-center style="color: #4CAF50">Đã giải quyết</span>
+                          {% endif %}
+                        </td>
                      </tr>
                      {% endfor %}
                      {% endif %}

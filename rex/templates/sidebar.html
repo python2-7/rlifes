@@ -3,7 +3,7 @@
 <div class="sidebar" data-background-color="brown" data-active-color="danger">
    <div class="logo">
       <a href="/account/dashboard" class="simple-text">
-      <img src="/static/home/images/logo/logo.png" alt="" style="    width: 120px; margin-top: 10px">
+      <img src="/static/home/images/logo/logo.png" alt="" style="    width: 80px; ">
       </a>
    </div>
    <div class="logo logo-mini">
@@ -39,7 +39,7 @@
      <li  class="active">
         <a  href="/account/refferal" >
           <i class="ti-anchor"></i>
-          <p>Thành viên F1
+          <p>Danh sách trực tiếp
             
           </p>
         </a>
@@ -49,7 +49,7 @@
       <li  class="">
         <a  href="/account/refferal" >
           <i class="ti-anchor"></i>
-          <p>Thành viên F1
+          <p>Danh sách trực tiếp
           </p>
         </a>
         
@@ -59,7 +59,7 @@
       {% if data.menu == 'personal' %}
      <li  class="active">
         <a  href="/account/personal" >
-          <i class="ti-anchor"></i>
+          <i class="ti-pulse"></i>
           <p>Cây hệ thống
             
           </p>
@@ -69,7 +69,7 @@
       {% else %}
       <li  class="">
         <a  href="/account/personal" >
-          <i class="ti-anchor"></i>
+          <i class="ti-pulse"></i>
           <p>Cây hệ thống
           </p>
         </a>
@@ -78,18 +78,63 @@
       {% endif %}
      
         <!-- =========================== -->
-      {% if data.menu == 'history' %}
+      {% if data.menu == 'history-tructiep' %}
         <li class="active">
-            <a href="/account/history">
-               <i class="ti-view-list"></i>
-               <p>Lịch sử hoa hồng</p>
+            <a href="/account/history-tructiep">
+               <i class="ti-receipt"></i>
+               <p>Hoa hồng trực tiếp</p>
             </a>
          </li>
      {% else %}
        <li class="">
-            <a href="/account/history">
-               <i class="ti-view-list"></i>
-               <p>Lịch sử hoa hồng</p>
+            <a href="/account/history-tructiep">
+               <i class="ti-receipt"></i>
+               <p>Hoa hồng trực tiếp</p>
+            </a>
+         </li>
+     {% endif %}
+     {% if data.menu == 'history-cancap' %}
+        <li class="active">
+            <a href="/account/history-cancap">
+               <i class="ti-wallet"></i>
+               <p>Hoa hồng cân doanh số</p>
+            </a>
+         </li>
+     {% else %}
+       <li class="">
+            <a href="/account/history-cancap">
+               <i class="ti-wallet"></i>
+               <p>Hoa hồng cân doanh số</p>
+            </a>
+         </li>
+     {% endif %}
+     {% if data.menu == 'history-thunhaptrenthunhap' %}
+        <li class="active">
+            <a href="/account/history-thunhaptrenthunhap">
+               <i class="ti-calendar"></i>
+               <p>HH thu nhập / thu nhập</p>
+            </a>
+         </li>
+     {% else %}
+       <li class="">
+            <a href="/account/history-thunhaptrenthunhap">
+               <i class="ti-calendar"></i>
+               <p>HH thu nhập / thu nhập</p>
+            </a>
+         </li>
+     {% endif %}
+     {% if data.menu == 'history-thuong' %}
+        <li class="active">
+            <a href="/account/history-thuong">
+               <i class="ti-harddrives"></i>
+               <p>HH thưởng danh hiệu</p>
+            </a>
+         </li>
+     {% else %}
+       <li class="">
+            <a href="/account/history-thuong">
+               <i class="ti-harddrives"></i>
+               <p>HH thưởng danh hiệu</p>
             </a>
          </li>
      {% endif %}

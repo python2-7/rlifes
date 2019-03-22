@@ -8,7 +8,7 @@
       <div class="card">
          <div class="content">
             
-            <a href="/admin/commission-calculation-danhhieu-submit" class="pull-right">
+            <a style="margin-bottom: 10px;" href="/admin/commission-calculation-danhhieu-submit" class="pull-right">
               <button type="button" class="btn btn-success">Tính hoa hồng</button>
             </a>
             <div class="clearfix"></div>
@@ -109,7 +109,7 @@
                         <th>Số tiền</th>
 
                         <th>Mô tả</th>
-                       
+                       <th>Trạng thái</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -123,7 +123,14 @@
                         
                         
                         <td>{{ item.detail  }}</td>
-                       
+                       <td >
+                          {% if item.status == 0%}
+                            <span text-center style="color: #FF5722">Đang chờ</span> - {{ item.date_profit | format_date}}
+                          {% endif %}
+                          {% if item.status == 1%}
+                            <span text-center style="color: #4CAF50">Đã giải quyết</span>
+                          {% endif %}
+                        </td>
                      </tr>
                      {% endfor %}
                      {% endif %}

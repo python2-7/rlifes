@@ -163,52 +163,64 @@
     position: absolute
 }
 .leftline.linefloor2 {
-    background: url(../img/icons/left1.png) no-repeat;
+    /*background: url(../../img/package/left1.png) no-repeat;*/
     height: 37px;
     position: absolute;
     width: 210px;
-    left: -169px;
+    left: -179px;
     top: 59px;
+    border-left: 1px solid #1cc7d0;
+    border-top: 1px solid #1cc7d0;
 }
 .rightline.linefloor2 {
-    background: url(../img/icons/right1.png) no-repeat;
+    /*background: url(../../img/package/right1.png) no-repeat;*/
     height: 37px;
     position: absolute;
-    width: 223px;
-    right: -233px;
+    width: 212px;
+    right: -168px;
     top: 59px;
+    border-right: 1px solid #1cc7d0;
+    border-top: 1px solid #1cc7d0;
 }
 .leftline.linefloor3 {
-    background: url(../img/icons/left2.png) no-repeat;
+    /*background: url(../../img/package/left2.png) no-repeat;*/
     height: 35px;
     left: -81px;
     position: absolute;
     top: 59px;
-    width: 80px
+    width: 118px;
+    border-left: 1px solid #1cc7d0;
+    border-top: 1px solid #1cc7d0;
 }
 .rightline.linefloor3 {
-    background: url(../img/icons/right2.png) no-repeat;
+    /*background: url(../../img/package/right2.png) no-repeat;*/
         height: 35px;
     position: absolute;
-    width: 85px;
-    right: -84px;
-    top: 58px;
+    width: 118px;
+    right: -69px;
+    top: 59px;
+    border-right: 1px solid #1cc7d0;
+    border-top: 1px solid #1cc7d0;
 }
 .leftline.linefloor4 {
-    background: url(../img/icons/left3.png) no-repeat;
-        height: 57px;
-    left: -35px;
+    /*background: url(../../img/package/left3.png) no-repeat;*/
+     height: 57px;
+    left: -32px;
     position: absolute;
-    top: 56px;
-    width: 37px;
+    top: 60px;
+    width: 73px;
+    border-left: 1px solid #1cc7d0;
+    border-top: 1px solid #1cc7d0;
 }
 .rightline.linefloor4 {
-    background: url(../img/icons/right3.png) no-repeat;
-      height: 56px;
+    /*background: url(../../img/package/right3.png) no-repeat;*/
+        height: 56px;
     position: absolute;
-    width: 41px;
-    right: -33px;
-    top: 56px;
+    width: 72px;
+    right: -20px;
+    top: 60px;
+    border-right: 1px solid #1cc7d0;
+    border-top: 1px solid #1cc7d0;
 }
 .leftline.linefloor5,
 .leftline.linefloor6,
@@ -218,19 +230,19 @@
     position: absolute
 }
 .leftline.linefloor5 {
-    background: url(../img/icons/left4.png) no-repeat;
+    background: url(../../img/package/package-left4.png) no-repeat;
     width: 20px;
     left: -11px;
     top: 11px
 }
 .rightline.linefloor5 {
-    background: url(../img/icons/right4.png) no-repeat;
+    background: url(../../img/package/package-right4.png) no-repeat;
     width: 20px;
     right: -11px;
     top: 10px
 }
 .leftline.linefloor6 {
-    background: url(../img/icons/left5.png) no-repeat;
+    background: url(../../img/package/package-left5.png) no-repeat;
     width: 15px;
     left: -8px;
     top: 24px
@@ -286,6 +298,7 @@
     height: 300px;
     /*margin-top: 60px*/
 }
+
 .personal_contain {
     padding: 0 35px 35px
 }
@@ -293,17 +306,17 @@
     font-size: 45px
 }
 .level2 {
-    background: url(../img/icons/B2.png) center center no-repeat!important
+    background: url(../../img/package/package-B2.png) center center no-repeat!important
 }
 .personal-tree .type-1 {
-    background: url(../img/icons/6.png) center center no-repeat;
+    background: url(../../img/package/package-6.png) center center no-repeat;
     background-size: 35px;
     color: transparent!important;
     position: relative;
     top: -30px
 }
 .personal-tree .type-2 {
-    background: url(../img/icons/200.png) center center no-repeat;
+    background: url(../../img/package/package-200.png) center center no-repeat;
     background-size: 35px;
     color: transparent!important;
     position: relative;
@@ -316,56 +329,19 @@
     position: relative
 }
 .personal-tree .package-0 {
-    background: url(../img/icons/0.png) center center no-repeat;
+    background: url(../../img/package/package-0.png) center center no-repeat;
     background-size: 35px
 }
-.personal-tree .package-100 {
-    background: url(../img/icons/100.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-200 {
-    background: url(../img/icons/200.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-500 {
-    background: url(../img/icons/500.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-1000 {
-    background: url(../img/icons/3000.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-2000 {
-    background: url(../img/icons/2000.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-10000 {
-    background: url(../img/icons/10000.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-20000 {
-    background: url(../img/icons/20000.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-3000 {
-    background: url(../img/icons/1000.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-100000 {
-    background: url(../img/icons/100000.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-5000 {
-    background: url(../img/icons/10000.png) center center no-repeat;
-    background-size: 35px
-}
-.personal-tree .package-7 {
-    background: url(../img/icons/10.png) center center no-repeat;
-    background-size: 35px
-}
+
 .personal-tree .type-add {
-    background: url(../img/icons/3.png) center center no-repeat;
+    background: url(../../img/package/package-3.png) center center no-repeat;
     background-size: 35px
+}
+.personal-tree .icon_user{
+    background: url(../../assets/img/icons/icon-user.png) center center no-repeat ;
+    background-size: 50px;
+    top: -7px;
+    left: 1px;
 }
 span.btn.btn-default.btn-tree {
     border-radius: 40px
@@ -402,7 +378,7 @@ span.btn.btn-default.btn-tree {
     .undefined_node {
         left: 119%!important;
     }
-}	
+}   
 
 
 
@@ -664,8 +640,8 @@ span.btn.btn-default.btn-tree {
 }
 .undefined_node {
     left: 47%;
-    position: absolute;
-    top: 150px;
+    /*position: absolute;
+    top: 150px;*/
 }
 
 .leftline.linefloor5,
@@ -681,18 +657,19 @@ span.btn.btn-default.btn-tree {
     top: 97px;
 }
 .name_node{
-    width: 136px;
+    width: 124px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     float: left;
-    margin-top: 5px;
+    margin-top: -2px;
     font-size: 10px;
     text-align: center;
-    padding: 0 8px;
-    color: #f98a05;
+    padding: 0 7px;
+    color: #5FC8F3;
     position: absolute;
-    margin-left: -100px;
+    left: -34px;
+    top: 65px;
 }
 .right_node.nodefloor2 {
     right: -210px;
@@ -704,7 +681,7 @@ span.btn.btn-default.btn-tree {
 }
 .right_node.nodefloor3 {
         right: -110px;
-    top: 93px;
+    top: 92px;
 }
 .left_node.nodefloor4 {
     left: -63px;
@@ -734,8 +711,13 @@ span.btn.btn-default.btn-tree {
 }
 .personal-tree {
     width: 100%;
-    height: 722px;
-    /*margin-top: 60px*/
+    height: 922px;
+   
+   /* position: absolute;*/
+    /*overflow-x: scroll;*/
+    position: relative;
+    z-index: 99999999999;
+    top: 28px;
 }
 .personal_contain {
     padding: 0 35px 35px
@@ -744,73 +726,9 @@ span.btn.btn-default.btn-tree {
     font-size: 45px
 }
 
-.personal-tree .type-1 {
-    background: url(../img/icons/0.png) center center no-repeat;
-    background-size: 60px;
-    color: transparent!important;
-    position: relative;
-    top: -5px;
-    left: 0px;
-}
-.personal-tree .type-2 {
-    background: url(../img/icons/100.png) center center no-repeat;
-    background-size: 60px;
-    color: transparent!important;
-    position: relative;
-    top: -5px;
-    left: 0px;
-}
-.personal-tree .type-3 {
-    background: url(../img/icons/500.png) center center no-repeat;
-    background-size: 60px;
-    color: transparent!important;
-    position: relative;
-    top: -5px;
-    left: 0px;
-}
-.personal-tree .type-4 {
-    background: url(../img/icons/1000.png) center center no-repeat;
-    background-size: 60px;
-    color: transparent!important;
-    position: relative;
-    top: -5px;
-    left: 0px;
-}
-.personal-tree .type-5 {
-    background: url(../img/icons/2000.png) center center no-repeat;
-    background-size: 60px;
-    color: transparent!important;
-    position: relative;
-    top: -5px;
-    left: 0px;
-}
-.personal-tree .type-6 {
-    background: url(../img/icons/5000.png) center center no-repeat;
-    background-size: 60px;
-    color: transparent!important;
-    position: relative;
-    top: -5px;
-    left: 0px;
-}
-.personal-tree .type-7 {
-    background: url(../img/icons/10000.png) center center no-repeat;
-    background-size: 60px;
-    color: transparent!important;
-    position: relative;
-    top: -5px;
-    left: 0px;
-}
-.personal-tree .type-8 {
-    background: url(../img/icons/20000.png) center center no-repeat;
-    background-size: 60px;
-}
-.personal-tree .type-9 {
-    background: url(../img/icons/50000.png) center center no-repeat;
-    background-size: 60px;
-}
 .personal-tree .type-none {
-    background: url(../img/icons/none.png) center center no-repeat;
-    background-size: 60px;
+    background: url(../../img/package/package-none.png) center center no-repeat;
+    background-size: 65px;
 }
 
 .personal-tree .type-2,
@@ -826,11 +744,13 @@ a.adduser {
     
 }
 .personal-tree .type-add {
-    background: url(../img/icons/3.png) center center no-repeat;
-    background-size: 60px
+    background: url(../../assets/img/icons/add-user.png) center center no-repeat;
+    background-size: 52px;
+    top: -8px;
+    left: -10px;
 }
-.personal-tree .undefined_tresss {
-    /*display: none;*/
+.personal-tree .none_tresss div{
+    display: none;
 }
 
 @media only screen and (max-width: 990px) {
@@ -912,16 +832,17 @@ a.adduser {
 }
 .customer_toolip{
    /* position: absolute;*/
-    width: 280px;
+    width: 270px;
    /* z-index: 999999999999;
     top: 135px;
     bottom: -40px;*/
+    z-index: 999999999999;
 }
 .customer_toolip table{
    /* background: #3B76A0;*/
 }
 .customer_toolip table tr{
-    border: 1px solid #eeb488;
+    border: 1px solid #eee;
 }
 .personal-tree i{
     position: relative;
@@ -943,10 +864,7 @@ a.adduser {
     left: -60px;
     top: 42px;
 }
-.personal-tree .type-0 {
-    background: url(../img/icons/0.png) center center no-repeat;
-    background-size: 53px;
-}
+
 .right_node.nodefloor3 .customer_toolip.left,.right_node.nodefloor3 .customer_toolip.right{
     left: -203px;
     top: -44px;
@@ -1067,7 +985,23 @@ a.adduser {
     max-width: 265px;
     /* If max-width does not work, try using width instead */
     width: 265px; 
+    z-index: 99999999;
+}
+.customer_toolip{
+    z-index: 9999999999999;
+    font-size: 13px;
+    background: #fff;
+}
+.customer_toolip .table{
+    margin-bottom: 0px;
 }
 .customer_toolip .table > tbody > tr > td{
     padding: 5px 11px;
 } 
+.customer_toolip .username{
+    background: #403e42;
+    border-radius: 5px 5px 0 0 ;
+    color: #fff;
+    padding: 20px;
+    height: 45px;
+}

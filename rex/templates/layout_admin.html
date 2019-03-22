@@ -29,7 +29,7 @@
     <!-- fakeLoader -->
 
     <link href="/static/assets/css/fakeLoader.css" rel="stylesheet" >
-
+    <link href="/static/assets/css/customer.css" rel="stylesheet" >
     {% block css %}{% endblock %}
     <!-- Start Alexa Certify Javascript -->
 <script type="text/javascript">
@@ -40,11 +40,11 @@ _atrk_opts = { atrk_acct:"awLMq1Fx9f207i", domain:"worldtrader.info",dynamic: tr
 <!-- End Alexa Certify Javascript -->  
 </head>
 
-<body>
+<body >
 <div class="fakeloader"></div>
     <div class="wrapper">
 		{% include "sidebar_admin.html" %}
-        <div class="main-panel">
+        <div class="main-panel" >
             {% include "navbar_admin.html" %}
             <div class="content">
                 <div class="container-fluid">
@@ -396,6 +396,7 @@ _atrk_opts = { atrk_acct:"awLMq1Fx9f207i", domain:"worldtrader.info",dynamic: tr
     });
 function formatNumber(nStr)
 {
+    nStr = (nStr.toFixed(2));
     nStr += '';
     var x = nStr.split('.');
     var x1 = x[0];

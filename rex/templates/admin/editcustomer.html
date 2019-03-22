@@ -111,10 +111,16 @@
 
                    
 
-                    <!-- <div class="form-group">
-                      <label for="email">Ngày tháng năm sinh {{data.customer.birthday}}</label>
+                    <div class="form-group">
+                      <label for="email">Ngày tháng năm sinh:</label>
                       <input type="date" name="birthday" value="{{data.customer.birthday}}" class="form-control" value="2012-3-23" placeholder="Ngày tháng năm sinh">
-                    </div> -->
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email">Số CMND</label>
+                      <input type="text" name="cmnd" class="form-control" value="{{data.customer.cmnd}}" placeholder="Số CMND">
+                    </div>
+
                     <div class="">
                       <div class="form-group">
                         <label for="email">Số điện thoại:</label>
@@ -122,22 +128,7 @@
                       </div>
                     </div>
                     
-                    
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="email">Mật khẩu đăng nhập:</label>
-                      <input type="text" name="password" class="form-control" placeholder="Mật khẩu đăng nhập">
-                    </div>
-                  <div class="">
-                      <div class="form-group">
-                        <label for="email">Mật khẩu cấp 2</label>
-                        <input type="text" placeholder="Mật khẩu cấp 2" class="form-control" name="password_transaction" value="" >
-                      </div>
-                  </div>
-                  
-                  
-                  <div class="">
+                    <div class="">
                       <div class="form-group">
                         <label for="email">Trạng thái</label>
                         <select name="status" class="form-control">
@@ -147,6 +138,42 @@
                         
                       </div>
                   </div>
+                    
+                </div>
+                <div class="col-md-6">
+                  <div class="">
+                      <div class="form-group">
+                        <label for="email">Tên tài khoản ngân hàng</label>
+                        <input type="text" class="form-control" name="account_horder"  placeholder="Tên tài khoản ngân hàng"  value="{{data.customer.account_horder}}">
+                      </div>
+                  </div>
+                  <div class="">
+                      <div class="form-group">
+                        <label for="email">Số tài khoản ngân hàng</label>
+                        <input type="text" class="form-control" name="account_number"  placeholder="Số tài khoản ngân hàng" value="{{data.customer.account_number}}">
+                      </div>
+                  </div>
+                  <div class="">
+                      <div class="form-group">
+                        <label for="email">Tên ngân hàng</label>
+                        <input type="text" class="form-control" name="bankname"  placeholder="Tên ngân hàng" placeholder="Số tài khoản ngân hàng" value="{{data.customer.bankname}}">
+                      </div>
+                  </div>
+                  <div class="">
+                      <div class="form-group">
+                        <label for="email">Chi nhánh ngân hàng</label>
+                        <input type="text" class="form-control" name="brandname" placeholder="Chi nhánh ngân hàng"  placeholder="Số tài khoản ngân hàng" value="{{data.customer.brandname}}">
+                      </div>
+                  </div>
+
+
+                    <div class="form-group">
+                      <label for="email">Mật khẩu đăng nhập:</label>
+                      <input type="text" name="password" class="form-control" placeholder="Mật khẩu đăng nhập">
+                    </div>
+                  
+                  
+                  
                   
                 </div>
 

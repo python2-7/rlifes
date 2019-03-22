@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Hệ thống F1 | IOT{% endblock %}
+{% block title %}Danh sách trực tiếp | ACT-LIFE{% endblock %}
 {% block css %}
 <link href="/static/assets/css/jstree.css" rel="stylesheet" >
 {% endblock %}
@@ -26,10 +26,10 @@
 
 <div class="row">
    <div class="col-md-12">
-      
+     
       <div class="card">
          <div class="content">
-            <h4 class="title">Hệ thống F1</h4>
+            <h4 class="title">Danh sách trực tiếp</h4>
             <div class="toolbar">
               
             </div>
@@ -38,7 +38,6 @@
                   <thead>
                      <tr>
                         <th>Thời gian tạo</th>
-                        <th>ID</th>
                         <th>Email</th>
                         <th>Họ tên</th>
                         <th>Số điện thoại</th>
@@ -49,9 +48,9 @@
                      {% for item in data.refferal %}
                      <tr>
                         <td>{{ item.creation | format_date }}</td>
-                        <td>{{ item.username }}</td>
+                        
                         <td>{{ item.email }}</td>
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.fullname }}</td>
                         <td>{{ item.telephone }}</td>
                      </tr>
                      {% endfor %}

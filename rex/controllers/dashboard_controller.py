@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
 from flask import Blueprint, request, session, redirect, url_for, render_template, flash
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from rex import app, db
@@ -41,7 +43,40 @@ def is_number(s):
     except ValueError:
         return False
     return True
+def total_binary_left(customer_id):
+    customer = db.users.find_one({'customer_id': customer_id})
+    count_left = 0
+    if customer['left'] == '':
+        count_left = 0
+    else:
+        id_left_all = str(customer['left'])+get_id_tree(customer['left'])
+        id_left_all = id_left_all.split(',')
+        if (len(id_left_all) > 0):
+            for yy in id_left_all:
+                count_left = count_left + 1
+    return count_left
 
+def total_binary_right(customer_id):
+    customer = db.users.find_one({'customer_id': customer_id})
+    count_right = 0
+    if customer['right'] == '':
+        count_right = 0
+    else:
+        id_right_all = str(customer['right'])+get_id_tree(customer['right'])
+        id_right_all = id_right_all.split(',')
+        if (len(id_right_all) > 0):
+            for yy in id_right_all:
+                count_right = count_right + 1
+    return count_right
+
+def get_id_tree(ids):
+    listId = ''
+
+    query = db.users.find({'p_binary': ids})
+    for x in query:
+        listId += ', %s'%(x['customer_id'])
+        listId += get_id_tree(x['customer_id'])
+    return listId
 @dashboard_ctrl.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
 
@@ -51,12 +86,61 @@ def dashboard():
 		uid = session.get('uid')
 		user = db.User.find_one({'customer_id': uid})
 		username = user['username']
-		
+		data_ticker = db.tickers.find_one({})
+
+
+
+		count_f1 = db.users.find({'$and' : [{'p_node' : uid},{'investment':{'$gt': 0 }} ]}).count()
+
+		max_out_level = 0
+		percent_nhom = 0
+		if float(user['total_node']) >= 10000000:
+			percent_nhom = 8
+			max_out_level = 50000000
+		if float(user['total_node']) >= 20000000:
+			percent_nhom = 9
+			max_out_level = 100000000
+		if float(user['total_node']) >= 30000000:
+			percent_nhom = 10
+			max_out_level = 200000000
+		if float(user['total_node']) >= 40000000:
+			percent_nhom = 11
+			max_out_level = 400000000
+		if float(user['total_node']) >= 50000000:
+			percent_nhom = 12
+			max_out_level = 500000000
+
+		if int(user['level']) == 0:
+			danhhieu = 'Thành viên miễn phí'
+		if int(user['level']) == 1:
+			danhhieu = 'TƯ VẤN VIÊN'
+		if int(user['level']) == 2:
+			danhhieu = 'TRƯỞNG NHÓM'
+		if int(user['level']) == 3:
+			danhhieu = 'TRƯỞNG PHÒNG'
+		if int(user['level']) == 4:
+			danhhieu = 'GIÁM ĐỐC KINH DOANH'
+		if int(user['level']) == 5:
+			danhhieu = 'GIÁM ĐỐC CẤP CAO'
+		if int(user['level']) == 6:
+			danhhieu = 'GIÁM ĐỐC MIỀN'
+		if int(user['level']) == 7:
+			danhhieu = 'VIP'
+
 		data ={
 			
 		    'user': user,
 		    'menu' : 'dashboard',
 		    'float' : float,
+		    'price' : data_ticker['price'],
+		    'percent_nhom' : percent_nhom,
+		    'danhhieu' : danhhieu,
+		    'max_out_level' : max_out_level,
+		    'count_binary_left' : total_binary_left(uid),
+          	'count_binary_right' : total_binary_right(uid),
+          	'count_f1' : count_f1,
+          	'percent_nhom' : percent_nhom,
+          	'max_out_level' : max_out_level
 		}
 		
 		return render_template('account/dashboard.html', data=data)

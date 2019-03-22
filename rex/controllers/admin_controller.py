@@ -27,7 +27,7 @@ from block_io import BlockIo
 import requests
 import onetimepass
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
-
+import collections
 version = 2 # API version
 block_io = BlockIo('9fd3-ec01-722e-fd89', 'SECRET PIN', version)
 __author__ = 'carlozamagni'
@@ -77,18 +77,11 @@ def binaryAmount(user_id, amount_invest):
 def TotalnodeAmount(user_id, amount_invest):
     customer_ml = db.User.find_one({"customer_id" : user_id })
     if customer_ml.p_node != '':
-        while (True):
-            customer_ml_p_node = db.User.find_one({"customer_id" : customer_ml.p_node })
-            if customer_ml_p_node is None:
-                break
-            else:
-                customers = db.User.find_one({"customer_id" : customer_ml_p_node.customer_id })
-                customers.total_node = float(customers.total_node) + float(amount_invest)
-                db.users.save(customers)
-                
-            customer_ml = db.User.find_one({"customer_id" : customer_ml_p_node.customer_id })
-            if customer_ml is None:
-                break
+        customers = db.User.find_one({"customer_id" : customer_ml.p_node })
+        if customers is not None:
+            customers.total_node = float(customers.total_node) + float(amount_invest)
+            db.users.save(customers)
+        
     return True
 
 def get_receive_program(user_id,amount):
@@ -121,7 +114,7 @@ def ReceiveTrucHe(user_id, amount,percent,email_invest):
     new_balance_wallet = float(new_balance_wallet)
 
     db.users.update({ "_id" : ObjectId(customer['_id']) }, { '$set': {'th_wallet' :new_th_wallet, 'total_receive' : new_total_receive,'balance_wallet' : new_balance_wallet} })
-    detail = '%s - %s Mua %s RL'%(str(percent)+str('%'),email_invest,amount)
+    detail = '%s - %s Mua bảo hiểm gói %s RL'%(str(percent)+str('%'),email_invest,amount)
     SaveHistory(customer['customer_id'],
         customer['email'], 
         commission, 
@@ -247,6 +240,7 @@ def SaveHistory(uid, username, amount, types, detail,fullname):
         'amount': float(amount),
         'type' : types,
         'date_added' : datetime.utcnow(),
+        'date_profit' : datetime.utcnow()  + timedelta(days=30),
         'detail': detail,
         'status' : 0
     }
@@ -471,57 +465,7 @@ def commission_calculation_danhhieu_submit():
 @admin_ctrl.route('/dashboard', methods=['GET', 'POST'])
 def AdminDashboard():
 
-    # deposit_list = db.deposits.find({})
-    # now = datetime.today()
-    # for x in deposit_list:
-    #     history = db.historys.find({'$and' :[{'username' :x['username']},{'type' :'profit-daily'}]}).count()
-    #     date_added = x['date_added']
-    #     date_1 = date_added + timedelta(days=35)
-    #     db.deposits.update({'_id' :ObjectId(x['_id'])},{'$set' : {'date_finish' : date_1}})
-    #     if now > date_1:
-            
-    #         date_2 = date_added + timedelta(days=65)
-    #         db.deposits.update({'_id' :ObjectId(x['_id'])},{'$set' : {'date_finish' : date_2}})
-            
-    #         if now > date_2:
-
-    #             customer = db.users.find_one({'customer_id' : x['uid']})
-
-    #             new_daily_wallet = float(customer['daily_wallet']) + float(x['monthly'])
-
-    #             db.users.update({'customer_id' : x['uid']},{'$set' : {'daily_wallet' : new_daily_wallet}})
-                
-    #             detail = 'Nhận %s VNĐ từ Lãi hàng tháng'%("{:20,.0f}".format(float(x['monthly'])))
-    #             SaveHistory(customer['customer_id'],
-    #                 customer['username'], 
-    #                 x['monthly'], 
-    #                 'profit-daily',  
-    #                 detail,
-    #                 customer['name']
-    #             )
-
-    #             SaveProfit(
-    #                 customer['customer_id'], 
-    #                 customer['username'], 
-    #                 customer['name'], 
-    #                 customer['account_horder'], 
-    #                 customer['account_number'],
-    #                 customer['bankname'],
-    #                 customer['brandname'],
-    #                 x['monthly'],
-    #                 customer['telephone']
-                    
-    #             )
-
-
-    #             print history, 2,x['username']
-    #             date_3 = date_added + timedelta(days=95)
-    #             db.deposits.update({'_id' :ObjectId(x['_id'])},{'$set' : {'date_finish' : date_3}})
-                
-    #             if now > date_3:
-    #                 print history, 3,x['username']
-    #                 date_4 = date_added + timedelta(days=95)
-    #                 db.deposits.update({'_id' :ObjectId(x['_id'])},{'$set' : {'date_finish' : date_4}})
+    
     error = None
     if session.get('logged_in_admin') is None:
         return redirect('/admin/login')
@@ -562,24 +506,105 @@ def AdminCustomer():
         'id_login' : session.get('user_id_admin')
     }
     return render_template('admin/customer.html', data=data)
+def total_binary_left(customer_id):
+    customer = db.users.find_one({'customer_id': customer_id})
+    count_left = 0
+    if customer['left'] == '':
+        count_left = 0
+    else:
+        id_left_all = str(customer['left'])+get_id_tree(customer['left'])
+        id_left_all = id_left_all.split(',')
+        if (len(id_left_all) > 0):
+            for yy in id_left_all:
+                count_left = count_left + 1
+    return count_left
 
+def total_binary_right(customer_id):
+    customer = db.users.find_one({'customer_id': customer_id})
+    count_right = 0
+    if customer['right'] == '':
+        count_right = 0
+    else:
+        id_right_all = str(customer['right'])+get_id_tree(customer['right'])
+        id_right_all = id_right_all.split(',')
+        if (len(id_right_all) > 0):
+            for yy in id_right_all:
+                count_right = count_right + 1
+    return count_right
+
+def get_id_tree(ids):
+    listId = ''
+
+    query = db.users.find({'p_binary': ids})
+    for x in query:
+        listId += ', %s'%(x['customer_id'])
+        listId += get_id_tree(x['customer_id'])
+    return listId
 @admin_ctrl.route('/customer/imfomation/<customer_id>', methods=['GET', 'POST'])
 def AdminimfomationCustomer(customer_id):
     error = None
     if session.get('logged_in_admin') is None:
         return redirect('/admin/login')
 
-    query = db.users.find_one({'customer_id' : customer_id})
-    listf1 = db.users.find({'p_node' : query['customer_id']})
+    user = db.users.find_one({'customer_id' : customer_id})
+    listf1 = db.users.find({'p_node' : user['customer_id']})
 
     historys = db.historys.find({'uid': customer_id})
+
+
+    count_f1 = db.users.find({'$and' : [{'p_node' : customer_id},{'investment':{'$gt': 0 }} ]}).count()
+
+
+    percent_nhom = 0
+    max_out_level = 0
+    if float(user['total_node']) >= 10000000:
+        percent_nhom = 8
+        max_out_level = 50000000
+    if float(user['total_node']) >= 20000000:
+        percent_nhom = 9
+        max_out_level = 100000000
+    if float(user['total_node']) >= 30000000:
+        percent_nhom = 10
+        max_out_level = 200000000
+    if float(user['total_node']) >= 40000000:
+        percent_nhom = 11
+        max_out_level = 400000000
+    if float(user['total_node']) >= 50000000:
+        percent_nhom = 12
+        max_out_level = 500000000
+
+    if int(user['level']) == 0:
+        danhhieu = 'Thành viên miễn phí'
+    if int(user['level']) == 1:
+        danhhieu = 'TƯ VẤN VIÊN'
+    if int(user['level']) == 2:
+        danhhieu = 'TRƯỞNG NHÓM'
+    if int(user['level']) == 3:
+        danhhieu = 'TRƯỞNG PHÒNG'
+    if int(user['level']) == 4:
+        danhhieu = 'GIÁM ĐỐC KINH DOANH'
+    if int(user['level']) == 5:
+        danhhieu = 'GIÁM ĐỐC CẤP CAO'
+    if int(user['level']) == 6:
+        danhhieu = 'GIÁM ĐỐC MIỀN'
+    if int(user['level']) == 7:
+        danhhieu = 'VIP'
+
     data ={
-        'customer': query,
+        'customer': user,
         'listf1' : listf1,
         'menu' : 'customer',
         'float' : float,
         'history' : historys,
-        'id_login' : session.get('user_id_admin')
+        'id_login' : session.get('user_id_admin'),
+        'percent_nhom' : percent_nhom,
+        'danhhieu' : danhhieu,
+        'max_out_level' : max_out_level,
+        'count_binary_left' : total_binary_left(customer_id),
+        'count_binary_right' : total_binary_right(customer_id),
+        'count_f1' : count_f1,
+        'percent_nhom' : percent_nhom,
+        'max_out_level' : max_out_level
     }
     return render_template('admin/customer-infomation.html', data=data)
 
@@ -776,6 +801,7 @@ def UpdateStastusHistoryglobal(history_id):
     db.historys.update({ "_id" : ObjectId(history_id) }, { '$set': {'status' :1} })
     
     return redirect('/admin/commision-global')
+    
 @admin_ctrl.route('/update-history-thunhapf1/<history_id>', methods=['GET', 'POST'])
 def UpdateStastusHistorythunhapf1(history_id):
     error = None
@@ -786,6 +812,8 @@ def UpdateStastusHistorythunhapf1(history_id):
     db.historys.update({ "_id" : ObjectId(history_id) }, { '$set': {'status' :1} })
     
     return redirect('/admin/thu-nhap-f1')
+
+
 @admin_ctrl.route('/update-history/<history_id>', methods=['GET', 'POST'])
 def UpdateStastusHistory(history_id):
     error = None
@@ -796,68 +824,6 @@ def UpdateStastusHistory(history_id):
     db.historys.update({ "_id" : ObjectId(history_id) }, { '$set': {'status' :1} })
     
     return redirect('/admin/profit')
-
-@admin_ctrl.route('/update-payment-profit/<history_id>', methods=['GET', 'POST'])
-def UpdatepaymentStastusHistory(history_id):
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-
-    historys = db.profits.find_one({'_id': ObjectId(history_id)})
-    if int(historys['status']) == 0:
-        db.profits.update({ "_id" : ObjectId(history_id) }, { '$set': {'status' :1} })
-    else:
-        db.profits.update({ "_id" : ObjectId(history_id) }, { '$set': {'status' :0} })
-    return redirect('/admin/thong-ke')
-
-
-@admin_ctrl.route('/deposit/tai-dau-tu/<user_id>', methods=['GET', 'POST'])
-def TaiDauTu(user_id):
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-
-    db.deposits.update({ "uid" : user_id }, { '$set': {'status' :1} })
-    db.users.update({ "customer_id" : user_id }, { '$set': {'status_re' :0,'total_receive' :0} })
-    return redirect('/admin/deposit')
-
-
-@admin_ctrl.route('/deposit/thay-doi-ngay/<_id>', methods=['GET', 'POST'])
-def ThayDoiNgay(_id):
-
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    query = db.deposits.find_one({'_id': ObjectId(_id)})
-    data ={
-        'deposit': query,
-        'menu' : 'deposit',
-        'float' : float,
-        'id': _id
-    }
-    return render_template('admin/thay-doi-ngay.html', data=data)
-
-
-@admin_ctrl.route('/deposit/thay-doi-ngay-submit/<_id>', methods=['GET', 'POST'])
-def ThayDoiNgaySubmit(_id):
-
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    
-
-    date_added =  request.form['date_added']
-
-
-    date_addeds = datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S')
-    date_finish =  datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S') + timedelta(days=35)
-
-    db.deposits.update({ "_id" : ObjectId(_id) }, { '$set': {
-            'date_added' :date_addeds,
-            'date_finish' :date_finish
-    }})
-
-    return redirect('/admin/deposit')
 
 @admin_ctrl.route('/customer/edit-customer/<user_id>', methods=['GET', 'POST'])
 def AdminEditCustomerSubmit(user_id):
@@ -875,683 +841,247 @@ def AdminEditCustomerSubmit(user_id):
         
         status = request.form['status']
         password = request.form['password']
-        password_transaction = request.form['password_transaction']
+
+
+        cmnd = request.form['cmnd']
+        account_horder = request.form['account_horder']
+        account_number = request.form['account_number']
+        bankname = request.form['bankname']
+        brandname = request.form['brandname']
+
 
         db.users.update({ "_id" : ObjectId(user_id) }, { '$set': {
             'email' :email,
             'telephone' : telephone,
             'fullname' : fullname,
-            'status' : int(status)
+            'status' : int(status),
+            'cmnd' : cmnd,
+            'account_horder' : account_horder,
+            'account_number' : account_number,
+            'bankname' : bankname,
+            'brandname': brandname
         } })
         
         if password != '':
             password_new = set_password(password)
             db.users.update({ "_id" : ObjectId(user_id) }, { '$set': {'password' :password_new }})
 
-        if password_transaction != '':
-            password_transaction_new = set_password(password_transaction)
-            db.users.update({ "_id" : ObjectId(user_id) }, { '$set': {'password_transaction' :password_transaction_new }})
         
         return redirect('/admin/customer/'+user_id)
     else:
         return redirect('/admin/customer/'+user_id)
-
-
-
-@admin_ctrl.route('/commision-global', methods=['GET', 'POST'])
-def CommissionGloabl():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    
-    query = db.historys.find({'type': {'$regex': 'global'}})
-    data ={
-            'menu' : 'commision-global',
-            'history': query
-    }
-    return render_template('admin/commision-global.html', data=data)
-
-
-
-
-@admin_ctrl.route('/calculation-commission', methods=['GET', 'POST'])
-def CommissionCalculation():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    level1()
-    level2()
-    level3()
-    level4()
-    data ={
-        'menu' : 'calculation-commission',
-    }
-    return render_template('admin/calculation-commission.html', data=data)
-
-@admin_ctrl.route('/profit-daily', methods=['GET', 'POST'])
-def profitdaily():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-
-    now = datetime.today()
-    query = db.deposits.find({"date_finish": { "$lte": now }})
-    data ={
-        'menu' : 'profit-daily',
-        'history' :query
-    }
-    return render_template('admin/profit-daily.html', data=data)
-
-# LAI THANG
-@admin_ctrl.route('/profit-daily-submit', methods=['GET', 'POST'])
-def ProfitDailySubmit():
-    error = None
-    #return redirect('/admin/login')
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    now = datetime.today()
-    listdeposit = db.deposits.find({"date_finish": { "$lte": now }})
-    for x in listdeposit:
-        customer = db.users.find_one({'customer_id' : x['uid']})
-
-        new_daily_wallet = float(customer['daily_wallet']) + float(x['monthly'])
-
-        db.users.update({'customer_id' : x['uid']},{'$set' : {'daily_wallet' : new_daily_wallet}})
-        
-        detail = 'Nhận %s VNĐ từ Lãi hàng tháng'%("{:20,.0f}".format(float(x['monthly'])))
-        SaveHistory(customer['customer_id'],
-            customer['username'], 
-            x['monthly'], 
-            'profit-daily',  
-            detail,
-            customer['name']
-        )
-
-        SaveProfit(
-            customer['customer_id'], 
-            customer['username'], 
-            customer['name'], 
-            customer['account_horder'], 
-            customer['account_number'],
-            customer['bankname'],
-            customer['brandname'],
-            x['monthly'],
-            customer['telephone']
-            
-        )
-        nowss = datetime.today() + timedelta(days=30)
-        db.deposits.update({'_id' : ObjectId(x['_id'])},{'$set' : {'date_finish' : nowss}} )
-    return redirect('/admin/profit-daily')
-
-# HOA HONG TRUC TIEP
-@admin_ctrl.route('/calculation-commission/referall-submit', methods=['GET', 'POST'])
-def ReferallSubmit():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    listcustomer = db.users.find({'$and' : [{"r_wallet": { "$gt": 0 }},{'active' : 2}]} )    
-    for x in listcustomer:
-        amount_receve = x['r_wallet']
-        amount_receve = get_receive_program(x['customer_id'],amount_receve)
-        if float(amount_receve) > 0:
-            db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'r_wallet' :0} })
-
-            new_tructiep_wallet = float(x['tructiep_wallet']) + float(amount_receve)
-            db.users.update({'customer_id' : x['customer_id']},{'$set' : {'tructiep_wallet' : new_tructiep_wallet}})
-
-            SaveProfit(
-                x['customer_id'], 
-                x['username'], 
-                x['name'], 
-                x['account_horder'], 
-                x['account_number'],
-                x['bankname'],
-                x['brandname'],
-                amount_receve,
-                x['telephone']
-            )
-
-            ThunhapF1(x['customer_id'],amount_receve)
-    return redirect('/admin/calculation-commission')
-
-# HOA HONG THUONG THEM
-@admin_ctrl.route('/calculation-commission/thuongthem-submit', methods=['GET', 'POST'])
-def ThuongthemSubmit():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-
-    listcustomer = db.users.find({'$and' : [{"count_lefts": { "$gt": 4 }},{"count_rights": { "$gt": 4 }},{'active' : 2}]})    
-    for x in listcustomer:
-        amount_receve = 0
-        level_thuongthem = 0
-        if int(x['count_lefts']) >= 5 and int(x['count_rights']) >= 5 and int(x['level_thuongthem']) == 0:
-            amount_receve = 5000000
-            level_thuongthem = 1
-        if int(x['count_lefts']) >= 20 and int(x['count_rights']) >= 20 and int(x['level_thuongthem']) <= 1:
-            amount_receve = 15000000
-            level_thuongthem = 2
-        if int(x['count_lefts']) >= 30 and int(x['count_rights']) >= 30 and int(x['level_thuongthem']) <= 2:
-            amount_receve = 25000000
-            level_thuongthem = 3
-        if int(x['count_lefts']) >= 44 and int(x['count_rights']) >= 44 and int(x['level_thuongthem']) <= 3:
-            amount_receve = 35000000
-            level_thuongthem = 4
-        if int(x['count_lefts']) >= 99 and int(x['count_rights']) >= 99 and int(x['level_thuongthem']) <= 4:
-            amount_receve = 80000000
-            level_thuongthem = 0
-
-        if amount_receve > 0:
-            amount_receve = get_receive_program(x['customer_id'],amount_receve)
-
-            if (float(amount_receve)) > 0:
-
-                t_wallet = float(x['t_wallet'])
-                new_t_wallet = float(t_wallet) + float(amount_receve)
-                new_t_wallet = float(new_t_wallet)
-
-                db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'t_wallet' :new_t_wallet ,'level_thuongthem' : level_thuongthem} })
-
-                if int(x['count_lefts']) > int(x['count_rights']):
-                    new_counts = int(x['count_lefts']) - int(x['count_rights'])
-                    db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'t_wallet' :new_t_wallet ,'count_rights' : 0,'count_lefts' : new_counts} })
-                else:
-                    new_counts = int(x['count_rights']) - int(x['count_lefts'])
-                    db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'t_wallet' :new_t_wallet ,'count_rights' : new_counts,'count_lefts' : 0} })
-                
-                detail = 'Nhận %s VNĐ từ chương trình thưởng. (%s ID trái %s ID phải)' %("{:20,.0f}".format(amount_receve),x['count_lefts'],x['count_rights'])
-                SaveHistory(x['customer_id'],
-                    x['username'], 
-                    amount_receve, 
-                    'chuongtrinhthuong',  
-                    detail,
-                    x['name']
-                )
-                SaveProfit(
-                    x['customer_id'], 
-                    x['username'], 
-                    x['name'], 
-                    x['account_horder'], 
-                    x['account_number'],
-                    x['bankname'],
-                    x['brandname'],
-                    amount_receve,
-                    x['telephone']
-                )
-                ThunhapF1(x['customer_id'],amount_receve)
-
-    return redirect('/admin/calculation-commission')
-
-#HOA HONG HE THONG
-@admin_ctrl.route('/calculation-commission/system-submit', methods=['GET', 'POST'])
-def CommissionSystemSubmitS():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    
-    listcustomer = db.users.find({'$and' : [{"level": { "$gt": 0 }},{"total_node": { "$gt": 0 }},{'active' : 2}]} )    
-    for x in listcustomer:
-    
-        amount_receve = (float(x['total_node']))/100
-        doanhso = float(x['total_node'])
-        
-        amount_receve = get_receive_program(x['customer_id'],amount_receve)
-        if float(amount_receve) > 0:
-
-            s_wallet = float(x['s_wallet'])
-            new_s_wallet = float(s_wallet) + float(amount_receve)
-            new_s_wallet = float(new_s_wallet)
-
-            db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'s_wallet' :new_s_wallet ,'total_node' : 0} })
-            detail = 'Nhận %s VNĐ từ %s  hoa hồng hệ thống.(Doanh số %s)' %("{:20,.0f}".format(amount_receve),'1%',"{:20,.0f}".format(doanhso))
-            SaveHistory(x['customer_id'],
-                x['username'], 
-                amount_receve, 
-                'system',  
-                detail,
-                x['name']
-            )
-            SaveProfit(
-                x['customer_id'], 
-                x['username'], 
-                x['name'], 
-                x['account_horder'], 
-                x['account_number'],
-                x['bankname'],
-                x['brandname'],
-                amount_receve,
-                x['telephone']
-            )
-            ThunhapF1(x['customer_id'],amount_receve)
-    return redirect('/admin/calculation-commission')
-
-#HOA HONG TOAN CAU
-@admin_ctrl.route('/calculation-commission/global-submit', methods=['GET', 'POST'])
-def CommissionGloablSubmit():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    
-    customer = db.users.find({"level": { "$gt": 1 }})    
-
-    count_level2 = db.users.find({"level": 2}).count()
-    count_level3 = db.users.find({"level": 3}).count()
-    count_level4 = db.users.find({"level": 4}).count()
-
-    user_admin = db.users.find_one({ "_id" : ObjectId('5b4f63a6a8562a448030cae6') } )    
-    total_admin = float(user_admin['total_left']) + float(user_admin['total_right'])
-    if float(total_admin) > 0:
-        for x in customer:
-            if int(x['level']) == 2:
-                percent = 1
-                dongchia = count_level2
-            if int(x['level']) == 3:
-                percent = 1
-                dongchia = count_level3
-            if int(x['level']) >= 4:
-                percent = 1.5
-                dongchia = count_level4
-        
-            amount_receve = float(total_admin)*percent/100/dongchia
-            
-            amount_receve = get_receive_program(x['customer_id'],amount_receve)
-            if float(amount_receve) > 0:
-
-                g_wallet = float(x['g_wallet'])
-                new_g_wallet = float(g_wallet) + float(amount_receve)
-                new_g_wallet = float(new_g_wallet)
-
-                db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'g_wallet' :new_g_wallet} })
-
-                detail = 'Nhận đồng chia %s VNĐ từ %s  hoa hồng toàn cầu.(Toàn cầu %s)' %("{:20,.0f}".format(amount_receve),str(percent)+'%',"{:20,.0f}".format(total_admin))
-                SaveHistory(x['customer_id'],
-                    x['username'], 
-                    amount_receve, 
-                    'global',  
-                    detail,
-                    x['name']
-                )
-                SaveProfit(
-                    x['customer_id'], 
-                    x['username'], 
-                    x['name'], 
-                    x['account_horder'], 
-                    x['account_number'],
-                    x['bankname'],
-                    x['brandname'],
-                    amount_receve,
-                    x['telephone']
-                )
-                ThunhapF1(x['customer_id'],amount_receve)
-
-        db.users.update({ "_id" : ObjectId("5b4f63a6a8562a448030cae6") }, { '$set': {'total_left' :0,'total_right' :0} })
-    return redirect('/admin/calculation-commission')
-
-#HOA HONG THU NHAP F1
-@admin_ctrl.route('/calculation-commission/thunhapf1-submit', methods=['GET', 'POST'])
-def Thunhapf1Submit():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-    listcustomer = db.users.find({'$and' :[{"m_wallet": { "$gt": 0 }},{'active' : 2}]} )    
-    for x in listcustomer:
-        amount_receve = x['m_wallet']
-
-
-        thunhapf1_wallet = float(x['thunhapf1_wallet'])
-        new_thunhapf1_wallet = float(thunhapf1_wallet) + float(amount_receve)
-        new_thunhapf1_wallet = float(new_thunhapf1_wallet)
-
-        db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'m_wallet' :0, 'thunhapf1_wallet' : new_thunhapf1_wallet} })
-        SaveProfit(
-            x['customer_id'], 
-            x['username'], 
-            x['name'], 
-            x['account_horder'], 
-            x['account_number'],
-            x['bankname'],
-            x['brandname'],
-            amount_receve,
-            x['telephone']
-        )
-    return redirect('/admin/calculation-commission')
-
-
-# HOA HONG can cap
-@admin_ctrl.route('/calculation-commission/cancap-submit', methods=['GET', 'POST'])
-def CancapSubmit():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
-
-    listcustomer = db.users.find({'$and' : [{'active' : 2},{"count_leftss": { "$gt": 0 }},{"count_rightss": { "$gt": 0 }}]})    
-    for x in listcustomer:
-
-        if int(x['count_leftss']) > int(x['count_rightss']): 
-            amount_receve = int(x['count_rightss'])*300000
-            cancap =  int(x['count_rightss'])
-        else:
-            amount_receve = int(x['count_leftss'])*300000
-            cancap =  int(x['count_leftss'])
-        amount_receve = get_receive_program(x['customer_id'],amount_receve)
-
-        if (float(amount_receve)) > 0:
-            if int(x['count_leftss']) > int(x['count_rightss']):
-                new_counts = int(x['count_leftss']) - int(x['count_rightss'])
-                db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'count_rightss' : 0,'count_leftss' : new_counts} })
-            else:
-                new_counts = int(x['count_rightss']) - int(x['count_leftss'])
-                db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'count_rightss' : new_counts,'count_leftss' : 0} })
-            
-
-            cancap_wallet = float(x['cancap_wallet'])
-            new_cancap_wallet = float(cancap_wallet) + float(amount_receve)
-            new_cancap_wallet = float(new_cancap_wallet)
-
-            db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'cancap_wallet' : new_cancap_wallet} })
-
-            detail = 'Nhận %s VNĐ từ cân cặp. (%s cặp)' %("{:20,.0f}".format(amount_receve),cancap)
-            SaveHistory(x['customer_id'],
-                x['username'], 
-                amount_receve, 
-                'cancap',  
-                detail,
-                x['name']
-            )
-            SaveProfit(
-                x['customer_id'], 
-                x['username'], 
-                x['name'], 
-                x['account_horder'], 
-                x['account_number'],
-                x['bankname'],
-                x['brandname'],
-                amount_receve,
-                x['telephone']
-            )
-            ThunhapF1(x['customer_id'],amount_receve)
-
-    return redirect('/admin/calculation-commission')
-
-@admin_ctrl.route('/updatePassword', methods=['GET', 'POST'])
-def updatePassword():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Please login' 
-        })
-    password = request.form['password']
-    
-    repeat_password = request.form['repeat_password']
-    wallet = request.form['wallet']
-    email = request.form['email']
-    telephone = request.form['telephone']
-
-
-    if wallet =='':
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Please enter wallet' 
-        })
-    if email =='':
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Please enter email' 
-        })
-    if telephone =='':
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Please enter telephone' 
-        })
-    if password =='' or repeat_password =='':
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Please enter password' 
-        })
-    if password != repeat_password:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Wrong repeat password ' 
-        })
-    user_id = request.form['user_id']
-    query = db.users.find({'_id': ObjectId(user_id)})
-    if query is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'That user dose not exits ' 
-        })
-    password_new = set_password(password)
-    db.users.update({ "_id" : ObjectId(user_id) }, { '$set': { "password": password_new ,"wallet" : wallet,'telephone' : telephone,'email' : email} })
-    return json.dumps({
-        'status': 'success', 
-        'message': 'Update Success ' 
-    })
-@admin_ctrl.route('/updateSponsor', methods=['GET', 'POST'])
-def updateSponsor():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Please login' 
-        })
-    p_node = request.form['p_node']
-    p_node = p_node.lower()
-    user_id = request.form['user_id']
-    query = db.users.find_one({'_id': ObjectId(user_id)})
-    if query is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'That user dose not exits ' 
-        })
-    find_node = db.users.find_one({'username': p_node})
-    if find_node is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Username dose not exits' 
-        })
-    db.users.update({ "_id" : ObjectId(user_id) }, { '$set': { "p_node": find_node['customer_id'] } })
-    return json.dumps({
-        'status': 'success', 
-        'message': 'Update Success ' 
-    })
-@admin_ctrl.route('/updatePbinary', methods=['GET', 'POST'])
-def updatePbinary():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Please login' 
-        })
-    p_binary = request.form['p_binary']
-    p_binary = p_binary.lower()
-    user_id = request.form['user_id']
-    query = db.users.find_one({'_id': ObjectId(user_id)})
-    if query is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'That user dose not exits ' 
-        })
-    find_binary = db.users.find_one({'username': p_binary})
-    if find_binary is None:
-        return json.dumps({
-            'status': 'error', 
-            'message': 'Username dose not exits' 
-        })
-    if query['p_binary'] == '':
-        print 'None'
-    else:
-        binary_current = db.users.find_one({'customer_id': query['p_binary']})
-        if binary_current is None:
-            print 'Current None'
-        else:
-            if query['customer_id'] == binary_current['left']:
-                db.users.update({ "_id" : ObjectId(binary_current['_id']) }, { '$set': { "left": '' } })
-            else:
-                db.users.update({ "_id" : ObjectId(binary_current['_id']) }, { '$set': { "right": '' } })
-    if find_binary['left'] == '':
-        db.users.update({ "_id" : ObjectId(find_binary['_id']) }, { '$set': { "left": query['customer_id'] } })
-        db.users.update({ "_id" : ObjectId(user_id) }, { '$set': { "p_binary": find_binary['customer_id'], 'type': 1 } })
-        return json.dumps({
-            'status': 'success', 
-            'message': 'Update Success ' 
-        })
-    if find_binary['right'] == '':
-        db.users.update({ "_id" : ObjectId(find_binary['_id']) }, { '$set': { "right": query['customer_id'] } })
-        db.users.update({ "_id" : ObjectId(user_id) }, { '$set': { "p_binary": find_binary['customer_id'], 'type': 1 } })
-        return json.dumps({
-            'status': 'success', 
-            'message': 'Update Success ' 
-        })
-    return json.dumps({
-        'status': 'error', 
-        'message': 'Position already exists ' 
-    })
-    
 
 
 
 @admin_ctrl.route('/logout')
 def logout():
     session.pop('logged_in_admin', None)
-    # logout_user()
     return redirect('/admin/login')
 
+def binary_left(customer_id):
+    check_f1 = db.users.find({'$and' : [{'p_node' : customer_id},{'investment':{'$gt': 0 }} ]})
+    
+    if check_f1.count() > 0:
+        listId = ''
+        for x in check_f1:
+            listId += ',%s'%(x['customer_id'])
+        arrId = listId[1:]
 
-@admin_ctrl.route('/support', methods=['GET', 'POST'])
-def support():
-    if session.get(u'logged_in_admin') is None:
-        return redirect('/admin/login')
-    query = db.supports.find({})
-    data ={
-    'support' : query,
-    'title': 'Support',
-    'menu' : 'support'
-    }
-    return render_template('admin/support.html', data=data)
-@admin_ctrl.route('/support/<ids>', methods=['GET', 'POST'])
-def Replysupport(ids):
-    if session.get(u'logged_in_admin') is None:
-        return redirect('/admin/login')
-    support = db.supports.find_one({'_id': ObjectId(ids)})
+        count = db.users.find_one({'customer_id': customer_id})
+        if count['left'] == '':
+            customer_binary = ',0'
+        else:
+            ids = count['left']
 
-    data ={
-    'data_support' : support,
-    'title': 'Support',
-    'menu' : 'support'
-    }
-    return render_template('admin/reply_support.html', data=data)
+            count = get_id_tree(count['left'])
 
-@admin_ctrl.route('/support/reply-support', methods=['POST'])
-def newsupporReplyt():
-    if session.get(u'logged_in_admin') is None:
-        flash({'msg':'Please login', 'type':'danger'})
-        return redirect('/admin/login')
-    if request.method == 'POST':
-        user_id = session.get('user_id')
-        sp_id = request.form['sp_id']
-        support = db.supports.find_one({'_id': ObjectId(sp_id)})
-        if support is None:
-            flash({'msg':'Not Found', 'type':'danger'})
-            return redirect('/admin/support/'+str(sp_id))
-        else: 
-            user = db.users.find_one({'_id': ObjectId(user_id)})
-            message = request.form['message']
-          
-            if  message == '':
-                flash({'msg':'Please enter message', 'type':'danger'})
-            else:    
-                data_support = {
-                'user_id': 'admin',
-                'username' : 'WordTrade Support',
-                'message': message,
-                'date_added' : datetime.utcnow()
-                }
-                db.supports.update({ "_id" : ObjectId(sp_id) }, { '$set': { "status": 1 }, '$push':{'reply':data_support } })
-                flash({'msg':'Success', 'type':'success'})
-                return redirect('/admin/support/'+str(sp_id))    
+            if count:
+                customer_binary = '%s , %s'%(count, ids)
 
-    return redirect('/admin/support/'+str(sp_id))
+            else:
+                customer_binary = ',%s'%(ids)
+
+        customer_binary = customer_binary[1:]
+
+        array = '%s, %s'%(arrId, customer_binary)
+        customers = array.split(',')
+        customers = map(int, customers)
+
+        check_in_left = [item for item, count in collections.Counter(customers).items() if count > 1]
+
+        if len(check_in_left) != 0:
+            check_in_left = 1
+        else:
+            check_in_left = -1
+    else:
+        check_in_left = -1
+    return check_in_left
+    
+
+def binary_right(customer_id):
+    check_f1 = db.users.find({'$and' : [{'p_node' : customer_id},{'investment':{'$gt': 0 }} ]})
+
+    if check_f1.count() > 0:
+        listId = ''
+        for x in check_f1:
+            listId += ', %s'%(x['customer_id'])
+        arrId = listId[1:]
+        count = db.users.find_one({'customer_id': customer_id})
+        if count['right'] == '':
+            customer_binary = ',0'
+        else:
+            ids = count['right']
+            count = get_id_tree(count['right'])
+            if count:
+                customer_binary = '%s , %s'%(count, ids)
+            else:
+                customer_binary = ',%s'%(ids)
+            
+        customer_binary = customer_binary[1:]
+        array = '%s, %s'%(arrId, customer_binary)
+        customers = array.split(',')
+        customers = map(int, customers)
+
+        check_in_right = [item for item, count in collections.Counter(customers).items() if count > 1]
+        if len(check_in_right) != 0:
+            check_in_right = 1
+        else:
+            check_in_right = -1
+    else:
+        check_in_right = -1
+    return check_in_right
 
 
+@admin_ctrl.route('/commission-calculation-system', methods=['GET', 'POST'])
+def commission_calculation_system():
+    
 
-@admin_ctrl.route('/quan-ly-thiet-bi-submit', methods=['GET', 'POST'])
-def QuanlythietbiSubmit():
-    error = None
-    if session.get('logged_in_admin') is None:
-        return redirect('/admin/login')
+    listcustomer = db.users.find({'$and' : [{"investment": { "$gt": 0 }},{"total_pd_left": { "$gt": 0 }},{'total_pd_right' : { "$gt": 0 }}]} )    
+    for customer in listcustomer:
 
-    if request.method == 'POST':
+        if binary_left(customer['customer_id']) == 1 and binary_right(customer['customer_id']) == 1:
+            if customer['total_pd_left'] > customer['total_pd_right']:
+                balanced = customer['total_pd_right']
+                pd_left = float(customer['total_pd_left'])-float(customer['total_pd_right'])
+                db.users.update({ "customer_id" : customer['customer_id'] }, { '$set': { "total_pd_left": pd_left } })
+                db.users.update({ "customer_id" : customer['customer_id'] }, { '$set': { "total_pd_right": 0 } })
+            else:
+                balanced = customer['total_pd_left']
+                pd_right = float(customer['total_pd_right'])-float(customer['total_pd_left'])
+                db.users.update({ "customer_id" : customer['customer_id'] }, { '$set': { "total_pd_left": 0 } })
+                db.users.update({ "customer_id" : customer['customer_id'] }, { '$set': { "total_pd_right": pd_right } })
+            
+            percent = 0
+            if float(customer['total_node']) >= 100:
+                percent = 8
+                max_out_level = 500
+            if float(customer['total_node']) >= 200:
+                percent = 9
+                max_out_level = 1000
+            if float(customer['total_node']) >= 300:
+                percent = 10
+                max_out_level = 2000
+            if float(customer['total_node']) >= 400:
+                percent = 11
+                max_out_level = 4000
+            if float(customer['total_node']) >= 500:
+                percent = 12
+                max_out_level = 5000
 
-        fullname = request.form['fullname']
-        
-        address = request.form['address']
-        telephone = request.form['telephone']
-        description = request.form['description']
-        date_added = request.form['date_added']
-        profit = request.form['profit']
-        datas = {
-            'fullname': fullname,
-            'telephone' : telephone,
-            'address':address,
-            'profit' : float(profit),
-            'description' : description,
-            'date_added': datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S'),
-            'date_finish' : datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S') + timedelta(days=30)
+            if float(percent) > 0:
+
+                commission = float(balanced)*float(percent)/100
+                commission = round(commission,2)
+
+                if float(commission) > float(max_out_level):
+                    commission = float(max_out_level)
+
+                n_wallet = float(customer['n_wallet'])
+                new_n_wallet = float(n_wallet) + float(commission)
+                new_n_wallet = float(new_n_wallet)
+
+                total_receive = float(customer['total_receive'])
+                new_total_receive = float(total_receive) + float(commission)
+                new_total_receive = float(new_total_receive)
+
+                balance_wallet = float(customer['balance_wallet'])
+                new_balance_wallet = float(balance_wallet) + float(commission)
+                new_balance_wallet = float(new_balance_wallet)
+
+                max_out = float(customer['max_out'])
+                new_max_out = float(max_out) + float(commission)
+                new_max_out = float(new_max_out)
+
+                db.users.update({ "_id" : ObjectId(customer['_id']) }, { '$set': {'n_wallet' :new_n_wallet,'max_out' : new_max_out,  'total_receive' : new_total_receive,'balance_wallet' : new_balance_wallet} })
+                detail = '%s - %s weak branch' %(str(percent)+str('%'),"{:20,.0f}".format(balanced))
+                SaveHistory(customer['customer_id'],
+                    customer['email'], 
+                    commission, 
+                    'hoahongcannhanh',  
+                    detail,
+                    customer['fullname']
+                )
+                ThunhapTrenThuNhap(customer['customer_id'],commission)
+              
+    
+    return redirect('/admin/cancap')
+    
+def SaveProfit(uid, username, fullname, account_horder, account_number,bankname,brandname,amount,telephone):
+    profit_customer = db.profits.find_one({'$and' : [{'status' : 0},{'uid' : uid}]})
+    if profit_customer is None :
+        data_history = {
+            'uid' : uid,
+            'username' : username,
+            'fullname' : fullname,
+            'account_horder' : account_horder,
+            'account_number' : account_number,
+            'bankname' : bankname,
+            'brandname' : brandname,
+            'amount': float(amount),
+            'date_added' : datetime.utcnow(),
+            'status' : 0,
+            'telephone' : telephone
         }
-        db.devices.insert(datas)
-        return redirect('/admin/quan-ly-thiet-bi')
+        db.profits.insert(data_history)
     else:
-        
-        return redirect('/admin/quan-ly-thiet-bi')
-
-
-@admin_ctrl.route('/remove/quan-ly-thiet-bi/<ids>', methods=['GET', 'POST'])
-def RemoveQuanLyThietBi(ids):
-    if session.get(u'logged_in_admin') is None:
-        return redirect('/admin/login')
-    devices = db.devices.remove({'_id': ObjectId(ids)})
-
-    return redirect('/admin/quan-ly-thiet-bi')
-
-@admin_ctrl.route('/edit/quan-ly-thiet-bi/<ids>', methods=['GET', 'POST'])
-def EditQuanLyThietBi(ids):
-    if session.get(u'logged_in_admin') is None:
-        return redirect('/admin/login')
-    devices = db.devices.find_one({'_id': ObjectId(ids)})
-    data ={
-        'ids' : ids,
-        'menu' : 'quan-ly-thiet-bi',
-        'history': devices
-    }
-    return render_template('admin/edit-quan-ly-thiet-bi.html', data=data)
-
-
-@admin_ctrl.route('/edit-quan-ly-thiet-bi-submit/<ids>', methods=['GET', 'POST'])
-def EditQuanlythietbiSubmit(ids):
+        new_amount = float(profit_customer['amount']) + float(amount)
+        db.profits.update({'$and' : [{'status' : 0},{'uid' : uid}]},{'$set' : {'amount' : new_amount}})
+    return True
+@admin_ctrl.route('/update-payment-profit/<history_id>', methods=['GET', 'POST'])
+def UpdatepaymentStastusHistory(history_id):
     error = None
     if session.get('logged_in_admin') is None:
         return redirect('/admin/login')
 
-    if request.method == 'POST':
-
-        fullname = request.form['fullname']
-        
-        address = request.form['address']
-        telephone = request.form['telephone']
-        description = request.form['description']
-        date_added = request.form['date_added']
-        profit = request.form['profit']
-        
-        db.devices.update({'_id' : ObjectId(ids)},{'$set' : {'fullname': fullname,
-            'telephone' : telephone,
-            'address':address,
-            'profit' : float(profit),
-            'description' : description,
-            'date_added': datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S'),
-            'date_finish' : datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S') + timedelta(days=30)}
-        })
-        return redirect('/admin/quan-ly-thiet-bi')
+    historys = db.profits.find_one({'_id': ObjectId(history_id)})
+    if int(historys['status']) == 0:
+        db.profits.update({ "_id" : ObjectId(history_id) }, { '$set': {'status' :1} })
     else:
-        
-        return redirect('/admin/quan-ly-thiet-bi')
+        db.profits.update({ "_id" : ObjectId(history_id) }, { '$set': {'status' :0} })
+    return redirect('/admin/thong-ke')
+
+    
+@admin_ctrl.route('/calculation-history', methods=['GET', 'POST'])
+def calculation_history():
+    now = datetime.today()
+    list_history = db.historys.find({'$and' :[{'status' : 0},{'date_profit': { '$lte': now }}]} )
+    for x in list_history:
+        customer = db.users.find_one({'customer_id': x['uid']})
+
+        balance_wallet = float(customer['balance_wallet'])
+        new_balance_wallet = float(balance_wallet) - float(x['amount'])
+        new_balance_wallet = float(new_balance_wallet)
+
+        db.users.update({ "_id" : ObjectId(customer['_id']) }, { '$set': {'balance_wallet' : new_balance_wallet} })
+
+        SaveProfit(x['uid'], 
+            customer['email'], 
+            customer['fullname'], 
+            customer['account_horder'], 
+            customer['account_number'],
+            customer['bankname'],
+            customer['brandname'],
+            x['amount'],
+            customer['telephone'])
+        db.historys.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'status' : 1} })
+    return redirect('/admin/thong-ke')

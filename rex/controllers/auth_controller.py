@@ -90,42 +90,36 @@ def mail_reset_pass(email, usernames, password_new):
 
 @auth_ctrl.route('/login', methods=['GET', 'POST'])
 def login():
+
     error = None
     if session.get('logged_in') is not None:
         return redirect('/account/dashboard')
     if request.method == 'POST':
-       
-        username = request.form['username']
+        
+        email = request.form['email'].lower()
         password = request.form['password']
         
-        if username == '':
-            flash({'msg':'Vui lòng nhập ID ', 'type':'danger'})
+
+        if email == '':
+            flash({'msg':'Vui lòng nhập email. ', 'type':'danger'})
             return redirect('/auth/login')
         if password == '':
-            flash({'msg':'Vui lòng nhập mật khẩu', 'type':'danger'})
+            flash({'msg':'Vui lòng nhập mật khẩu.', 'type':'danger'})
             return redirect('/auth/login')
         
-        if username and password:
-            username = username.lower()
-            user = db.User.find_one( { 'username': username })
-
+        if email and password:
+            user = db.User.find_one({'email': email})
+    
             if user is None or check_password(user['password'], password) == False:
-                flash({'msg':'Sai ID hoặc mật khẩu. Vui lòng kiểm tra lại', 'type':'danger'})
+                flash({'msg':'Thông tin đăng nhập không đúng. Vui lòng thử lại!', 'type':'danger'})
                 return redirect('/auth/login')
+                
             else:
-                if user['status_2fa'] == 1:
-                    onetime = request.form['one_time_password']
-                    checkVerifY = verify_totp(onetime, user['secret_2fa'])
-                    if checkVerifY == False:
-                        msg = 'Mã xác thực hai yếu tố bạn chỉ định không chính xác. Vui lòng kiểm tra đồng hồ trên thiết bị xác thực của bạn để xác minh rằng thiết bị đang được đồng bộ hóa'
-                        flash({'msg':msg, 'type':'danger'})
-                        return redirect('/auth/login')
-                        
                 session['logged_in'] = True
                 session['user_id'] = str(user['_id'])
                 session['uid'] = user['customer_id']
-                   
                 return redirect('/account/dashboard')
+            
         else : 
             return redirect('/auth/login')
     return render_template('login.html', error=error)

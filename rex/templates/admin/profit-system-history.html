@@ -72,7 +72,7 @@ function showNotification(from, align, msg, type) {
                </div>
             </div> -->
             
-  <div class="col-md-12">
+  <div class="col-md-8">
     <div class="input-group input-daterange">
 
       <input type="text" id="min-date" class="form-control date-range-filter" data-date-format="yyyy-mm-dd" placeholder="From:">
@@ -97,6 +97,7 @@ function showNotification(from, align, msg, type) {
                        
                         
                         <th>Mô tả</th>
+                        <th>Trạng thái</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -104,12 +105,20 @@ function showNotification(from, align, msg, type) {
                      {% for item in data.query %}
                      <tr>
                         <td>{{ item.date_added | format_date }}</td>
-                        <td><a href="/admin/customer/imfomation/{{ item.customer_id}}">{{ item.username}}</a></td>
+                        <td><a href="/admin/customer/imfomation/{{ item.uid}}">{{ item.username}}</a></td>
                         <td>{{ item.fullname }}</td>
                         <td>{{ item.amount | format_number }} </td>
                         
                         
                         <td>{{ item.detail  }}</td>
+                        <td >
+                          {% if item.status == 0%}
+                            <span text-center style="color: #FF5722">Đang chờ</span> - {{ item.date_profit | format_date}}
+                          {% endif %}
+                          {% if item.status == 1%}
+                            <span text-center style="color: #4CAF50">Đã giải quyết</span>
+                          {% endif %}
+                        </td>
                      </tr>
                      {% endfor %}
                      {% endif %}

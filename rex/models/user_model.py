@@ -44,7 +44,14 @@ class User(Document):
         'th_wallet' : float,
         'dh_wallet' : float,
         'n_wallet' : float,
-        'ch_wallet' :float
+        'ch_wallet' :float,
+        'address' : unicode,
+        'cmnd' : unicode,
+        'birthday' : unicode,
+        'account_horder' : unicode,
+        'account_number' : unicode,
+        'bankname' : unicode,
+        'brandname' : unicode
     }
     validators = {
         'email': validators.max_length(120)

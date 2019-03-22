@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Thông tin tài khoản | IOT{% endblock %}
+{% block title %}Thông tin tài khoản | ACT-LIFE{% endblock %}
 {% block js %}
 <script src="/static/assets/js/script.js"></script>
 <script src="/static/assets/js/getinfo.js"></script>
@@ -31,7 +31,7 @@
             </div>
          </div>
          <div class="content">
-            <h4 class="title">{{ data.user.name }}  ({{data.user.username}})</h4>
+            <h4 class="title">{{ data.user.fullname }} <br/> ({{data.user.email}})</h4>
             <a href="#pablo" id="btn_update_avatar" class="btn btn-rose btn-round" style="display: none;">Update</a>
          </div>
       </div>
@@ -45,7 +45,7 @@
                   <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                      <li class="active"><a href="#profile11" aria-controls="profile11" role="tab" data-toggle="tab">Thông tin</a>
                      </li>
-                     <li><a href="#2fa" aria-controls="2fa" role="tab" data-toggle="tab">Bảo mật</a>
+                     
                      </li>
                      <li><a href="#settings11" aria-controls="settings11" role="tab" data-toggle="tab">Thay đổi mật khẩu</a>
                      </li>
@@ -59,13 +59,7 @@
                      <div class="col-sm-12">
                         <form  action="/user/updateaccount" method="post">
                            <div class="content">
-                              <div class="form-group label-floating">
-                                 <label class="control-label">
-                                    ID
-                                    <star></star>
-                                 </label>
-                                 <input class="form-control" readonly="true" name="login" type="text" email="true" value="{{ data.user.username }}" required="true">
-                              </div>
+                             
                               <div class="form-group label-floating">
                                  <label class="control-label">
                                     Email
@@ -79,7 +73,7 @@
                                     Họ tên
                                     <star>*</star>
                                  </label>
-                                 <input class="form-control"  name="name" type="text" email="true" value="{{ data.user.name }}" required="true" readonly="true">
+                                 <input class="form-control"  name="name" type="text" email="true" value="{{ data.user.fullname }}" required="true" readonly="true">
                               </div>
                               <div class="form-group label-floating">
                                  <label class="control-label">

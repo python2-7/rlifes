@@ -44,40 +44,40 @@ lm = LoginManager()
 lm.init_app(app)
 lm.login_view = '/auth/login'
 
-# from rex.controllers import user_controller
-# app.register_blueprint(blueprint=user_controller.user_ctrl, url_prefix='/user')
+from rex.controllers import user_controller
+app.register_blueprint(blueprint=user_controller.user_ctrl, url_prefix='/user')
 
-# from rex.controllers import auth_controller
-# app.register_blueprint(blueprint=auth_controller.auth_ctrl, url_prefix='/auth')
+from rex.controllers import auth_controller
+app.register_blueprint(blueprint=auth_controller.auth_ctrl, url_prefix='/auth')
 
-# from rex.controllers import dashboard_controller
-# app.register_blueprint(blueprint=dashboard_controller.dashboard_ctrl, url_prefix='/account')
+from rex.controllers import dashboard_controller
+app.register_blueprint(blueprint=dashboard_controller.dashboard_ctrl, url_prefix='/account')
 
-# from rex.controllers import ico_controller
-# app.register_blueprint(blueprint=ico_controller.ico_ctrl, url_prefix='/account')
+from rex.controllers import ico_controller
+app.register_blueprint(blueprint=ico_controller.ico_ctrl, url_prefix='/account')
 
-# from rex.controllers import deposit_controller
-# app.register_blueprint(blueprint=deposit_controller.deposit_ctrl, url_prefix='/account')
+from rex.controllers import deposit_controller
+app.register_blueprint(blueprint=deposit_controller.deposit_ctrl, url_prefix='/account')
 
-# from rex.controllers import refferal_controller
-# app.register_blueprint(blueprint=refferal_controller.refferal_ctrl, url_prefix='/account')
-# from rex.controllers import support_controller
-# app.register_blueprint(blueprint=support_controller.support_ctrl, url_prefix='/account')
+from rex.controllers import refferal_controller
+app.register_blueprint(blueprint=refferal_controller.refferal_ctrl, url_prefix='/account')
+from rex.controllers import support_controller
+app.register_blueprint(blueprint=support_controller.support_ctrl, url_prefix='/account')
 
-# from rex.controllers import personal_controller
-# app.register_blueprint(blueprint=personal_controller.personal_ctrl, url_prefix='/account')
+from rex.controllers import personal_controller
+app.register_blueprint(blueprint=personal_controller.personal_ctrl, url_prefix='/account')
 
-# from rex.controllers import history_controller
-# app.register_blueprint(blueprint=history_controller.history_ctrl, url_prefix='/account')
+from rex.controllers import history_controller
+app.register_blueprint(blueprint=history_controller.history_ctrl, url_prefix='/account')
 
-# from rex.controllers import withdrawal_controller
-# app.register_blueprint(blueprint=withdrawal_controller.withdrawal_ctrl, url_prefix='/account')
+from rex.controllers import withdrawal_controller
+app.register_blueprint(blueprint=withdrawal_controller.withdrawal_ctrl, url_prefix='/account')
 
-# from rex.controllers import wallet_controller
-# app.register_blueprint(blueprint=wallet_controller.wallet_ctrl, url_prefix='/account')
+from rex.controllers import wallet_controller
+app.register_blueprint(blueprint=wallet_controller.wallet_ctrl, url_prefix='/account')
 
-# from rex.controllers import auto_controller
-# app.register_blueprint(blueprint=auto_controller.auto_ctrl, url_prefix='/auto')
+from rex.controllers import auto_controller
+app.register_blueprint(blueprint=auto_controller.auto_ctrl, url_prefix='/auto')
 
 from rex.controllers import api_controller
 app.register_blueprint(blueprint=api_controller.api_ctrl, url_prefix='/api')
@@ -228,7 +228,7 @@ def format_only_date(date): # date = datetime object.
 @app.template_filter()
 
 def format_number(number): # date = datetime object.
-    return "{:20,.0f}".format(number)
+    return "{:20,.2f}".format(number)
 @app.template_filter()
 
 def find_username(uid): # date = datetime object.
@@ -331,7 +331,14 @@ def format_usds(value):
     value = float(value)
     return '{:20,.0f}'.format(value)
 
+@app.template_filter()
+def format_price(value1):
+    
+    value = float(value1)*100000
+    return '{:20,.2f}'.format(value)
 
+
+    return qty * unit_price
 
 @app.errorhandler(404)
 def page_not_found(e):
