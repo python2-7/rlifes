@@ -74,7 +74,7 @@ class User(Document):
     use_dot_notation = True
 
     def __repr__(self):
-        return '<User %r>' % self.name
+        return '<User %r>' % self.email
 
     # Flask-Login integration
     def is_authenticated(self):

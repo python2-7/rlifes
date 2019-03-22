@@ -3989,7 +3989,7 @@ strong {
     .off-canvas-sidebar .logo {
     padding: 0px 0px;
     margin: 0;
-    height: 100px;
+    height: 140px;
     position: relative;
     background: #1cc7d0;
     z-index: 4; }
@@ -6049,7 +6049,7 @@ star {
     color: #1091cb;
     font-weight: 300; }
   .card .content {
-    padding: 10px 15px 25px 15px; }
+    padding: 0px; }
     .card .content .title {
       margin: 10px 0 20px 0; }
     .card .content .big-title {

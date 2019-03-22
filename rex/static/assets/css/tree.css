@@ -343,6 +343,20 @@
     top: -7px;
     left: 1px;
 }
+.personal-tree .icon_user.type-0{
+    background: url(../../assets/img/icons/d2e922c51bda62ccd55ef2fb872dfa10.png) center center no-repeat #fff;
+    background-size: 50px;
+    top: -10px;
+    left: -10px;    
+}
+
+.left_node.nodefloor4.level2iconLevel .icon_user{
+    left: 0px;
+}
+.personal-tree .nodefloor4.left_node{
+
+}
+
 span.btn.btn-default.btn-tree {
     border-radius: 40px
 }

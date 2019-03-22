@@ -450,7 +450,7 @@ def children_tree_ico(json):
     if customer:
         for x in customer:
             checkF1 = db.User.find({'p_node': str(x['customer_id'])}).count()
-            print x['username']
+           
             if int(checkF1) > 0:
                 dataChild = True
             else:
@@ -479,5 +479,7 @@ def json_tree_ico(uid):
         uid = str(uid)
     else:
         uid = str(id_request)
+
+    
     page_sanitized = json_util.dumps(renderJson_ico(uid))
     return page_sanitized
