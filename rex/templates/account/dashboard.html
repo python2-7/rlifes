@@ -47,18 +47,18 @@
                <p class="text-center"><span class="ti-user"></span></p>
                <h3 class="text-center">Nhóm 1:</h3>
                <h4 class="text-center">SL: {{data.count_binary_left}}</h4>
-               <h2 class="text-center">{{data.user['total_pd_left'] | format_number}} RL</h2>
+               <h2 class="text-center">{{data.user['total_pd_left'] | format_number}} AL</h2>
                <p  class="text-center">Tích lũy</p>
-               <p style="margin-bottom: 26px;" class="text-center">{{data.user['total_pd_lefts'] | format_number}} RL</p>
+               <p style="margin-bottom: 26px;" class="text-center">{{data.user['total_pd_lefts'] | format_number}} AL</p>
             </div>
 
             <div class="col-md-6">
                <p class="text-center"><span class="ti-user"></span></p>
                <h3 class="text-center">Nhóm 2:</h3>
                <h4 class="text-center">SL: {{data.count_binary_right}}</h4>
-               <h2 class="text-center">{{data.user['total_pd_right'] | format_number}} RL</h2>
+               <h2 class="text-center">{{data.user['total_pd_right'] | format_number}} AL</h2>
                <p  class="text-center">Tích lũy</p>
-               <p style="margin-bottom: 26px;" class="text-center">{{data.user['total_pd_right'] | format_number}} RL</p>
+               <p style="margin-bottom: 26px;" class="text-center">{{data.user['total_pd_right'] | format_number}} AL</p>
             </div>
          </div>
      </div>
@@ -78,10 +78,10 @@
                <p>Email: <b>{{data.user['email']}}</b></p>
                <p>DH: <b>{{data.danhhieu}}</b></p>
                
-               <p>DSCN: <b>{{data.user['total_node'] | format_number}}</b> RL</p>
+               <p>DSCN: <b>{{data.user['total_node'] | format_number}}</b> AL</p>
                <p>Số F1 chính: <b>{{data.count_f1}}</b></p>
                <p>% Hoa hồng nhóm: <b>{{data.percent_nhom}}</b> %</p>
-               <p>Max HH nhóm: <b>{{data.max_out_level  | format_number}}</b> RL</p>
+               <p>Max HH nhóm: <b>{{data.max_out_level  | format_number}}</b> AL</p>
                
             </div>
          </div>
@@ -93,7 +93,7 @@
              <div class="card-icon">
                  <img src="/static/assets/img/icon-3.png" alt="">
              </div>
-             <h3 class="card-title">{{data.user['balance_wallet'] | format_number}} RL</h3>
+             <h3 class="card-title">{{data.user['balance_wallet'] | format_number}} AL</h3>
              <p class="card-category">{{ data.user['balance_wallet'] | format_price}} VNĐ</p>
          </div>
          <div class="card-footer">
@@ -110,7 +110,7 @@
              <div class="card-icon">
                  <img src="/static/assets/img/icon-3.png" alt="">
              </div>
-             <h3 class="card-title">{{data.user['th_wallet'] | format_number}} RL</h3>
+             <h3 class="card-title">{{data.user['th_wallet'] | format_number}} AL</h3>
              <p class="card-category">{{ data.user['th_wallet'] | format_price}} VNĐ</p>
          </div>
          <div class="card-footer">
@@ -126,7 +126,7 @@
              <div class="card-icon">
                  <img src="/static/assets/img/icon-3.png" alt="">
              </div>
-             <h3 class="card-title">{{data.user['n_wallet'] | format_number}} RL</h3>
+             <h3 class="card-title">{{data.user['n_wallet'] | format_number}} AL</h3>
              <p class="card-category">{{ data.user['n_wallet'] | format_price}} VNĐ</p>
          </div>
          <div class="card-footer">
@@ -142,7 +142,7 @@
              <div class="card-icon">
                  <img src="/static/assets/img/icon-3.png" alt="">
              </div>
-             <h3 class="card-title">{{data.user['ch_wallet'] | format_number}} RL</h3>
+             <h3 class="card-title">{{data.user['ch_wallet'] | format_number}} AL</h3>
              <p class="card-category">{{ data.user['ch_wallet'] | format_price}} VNĐ</p>
              
          </div>
@@ -160,7 +160,7 @@
              <div class="card-icon">
                  <img src="/static/assets/img/icon-3.png" alt="">
              </div>
-             <h3 class="card-title">{{data.user['dh_wallet'] | format_number}} RL</h3>
+             <h3 class="card-title">{{data.user['dh_wallet'] | format_number}} AL</h3>
              <p class="card-category">{{ data.user['dh_wallet'] | format_price}} VNĐ</p>
          </div>
          <div class="card-footer">

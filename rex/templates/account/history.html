@@ -41,7 +41,7 @@
                      {% for item in data.history %}
                      <tr>
                         <td text-center>{{ item.date_added | format_date }}</td>
-                        <td text-center>{{ item.amount | format_number}} RL</td>
+                        <td text-center>{{ item.amount | format_number}} AL</td>
                         <td>{{ item.detail  }}</td>
                         <td text-center>
                           {% if item.status == 0%}

@@ -114,7 +114,7 @@ def ReceiveTrucHe(user_id, amount,percent,email_invest):
     new_balance_wallet = float(new_balance_wallet)
 
     db.users.update({ "_id" : ObjectId(customer['_id']) }, { '$set': {'th_wallet' :new_th_wallet, 'total_receive' : new_total_receive,'balance_wallet' : new_balance_wallet} })
-    detail = '%s - %s Mua bảo hiểm gói %s RL'%(str(percent)+str('%'),email_invest,amount)
+    detail = '%s - %s Mua bảo hiểm gói %s AL'%(str(percent)+str('%'),email_invest,amount)
     SaveHistory(customer['customer_id'],
         customer['email'], 
         commission, 
@@ -453,7 +453,7 @@ def commission_calculation_danhhieu_submit():
                 new_balance_wallet = float(new_balance_wallet)
 
                 db.users.update({ "_id" : ObjectId(x['_id']) }, { '$set': {'dh_wallet' :new_dh_wallet, 'total_receive' : new_total_receive,'balance_wallet' : new_balance_wallet, 'levels' : int(x['level'])} })
-                detail = 'Thưởng %s RL danh hiệu %s' %("{:20,.0f}".format(commission),danhhieu)
+                detail = 'Thưởng %s AL danh hiệu %s' %("{:20,.0f}".format(commission),danhhieu)
                 SaveHistory(x['customer_id'],
                     x['email'], 
                     commission, 
