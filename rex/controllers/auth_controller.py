@@ -37,55 +37,54 @@ def check_password(pw_hash, password):
 
 
 
-def mail_reset_pass(email, usernames, password_new):
+def mail_reset_pass(email, password_new):
     html = """\
-        <div style="font-family:Arial,sans-serif;background-color:#1a1c35;color:#424242;text-align:center">
+        <div style="font-family:Arial,sans-serif;background-color:#9ebdc1;color:#424242;text-align:center">
    <div class="">
    </div>
-   <table style="table-layout:fixed;width:90%;max-width:600px;margin:0 auto;background-color:#1a1c35">
+   <table style="table-layout:fixed;width:90%;max-width:600px;margin:0 auto;background-color:#00BCD4">
       <tbody>
          <tr>
-            <td style="padding:20px 10px 10px 0px;text-align:left">
-               <a href="https://worldtrader.info/" title="World Trade" target="_blank" >
-               <img src="https://worldtrader.info/static/home/images/logo/logo.png" alt="" class="" style=" width: 100px;">
+            <td colspan="2" style="padding:20px 10px 10px 0px;text-align:center">
+               <a href="https://act-life.co" title="ACT LIFE" target="_blank" >
+               <img src="https://i.ibb.co/WghfHZr/logos.png" alt="" class="" style=" width: 160px; margin: 0 auto">
                </a>
             </td>
-            <td style="padding:0px 0px 0px 10px;text-align:right">
-            </td>
+            
          </tr>
       </tbody>
    </table>
 </div>
-<div style="font-family:Arial,sans-serif;background-color:#1a1c35;color:#424242;text-align:center">
+<div style="font-family:Arial,sans-serif;background-color:#9ebdc1;color:#424242;text-align:center">
    <table style="table-layout:fixed;width:90%;max-width:600px;margin:0 auto;background:#fff;font-size:14px;border:2px solid #e8e8e8;text-align:left;table-layout:fixed">
       <tbody>
-       <tr>
-          <td style="padding:30px 30px 10px 30px;line-height:1.8">Hi <b>"""+str(usernames)+"""</b>,</td></tr>
+       
          <tr>
-            <td style="padding:10px 30px;line-height:1.8">You recently requested to reset your password for your User Login and Management account on the <a href="https://worldtrader.info/" target="_blank">World Trade</a>.</td>
+            <td style="padding:10px 30px;line-height:1.8">
+Gần đây bạn đã yêu cầu đặt lại mật khẩu cho tài khoản Quản lý và đăng nhập người dùng của mình trên <a href="https:/act-life.co" target="_blank">ACT LIFE</a>.</td>
          </tr>
          <td style="padding:10px 30px">
-            <b style="display:inline-block">New password is : </b> """+str(password_new)+""" <br>
+            <b style="display:inline-block">Mật khẩu mới của bạn là : </b> """+str(password_new)+""" <br>
                 </td>
          <tr>
             <td style="border-bottom:3px solid #efefef;width:90%;display:block;margin:0 auto;padding-top:30px"></td>
          </tr>
          <tr>
-            <td style="padding:30px 30px 30px 30px;line-height:1.3">Best regards,<br> World Trade Team<br></td>
+            <td style="padding:30px 30px 30px 30px;line-height:1.3">Trân trọng,<br> ACT LIFE Team<br></td>
          </tr>
       </tbody>
    </table>
 </div>
-<div style="font-family:Arial,sans-serif;background-color:#1a1c35;color:#424242;text-align:center;padding-bottom:10px;height: 50px;">
+<div style="font-family:Arial,sans-serif;background-color:#9ebdc1;color:#424242;text-align:center;padding-bottom:10px;height: 50px;">
    
 </div>
     """
     return requests.post(
-      "https://api.mailgun.net/v3/worldtrader.info/messages",
-      auth=("api", "key-4cba65a7b1a835ac14b7949d5795236a"),
-      data={"from": "World Trade <no-reply@worldtrader.info>",
+      "https://api.mailgun.net/v3/act-life.co/messages",
+      auth=("api", "key-cade8d5a3d4f7fcc9a15562aaec55034"),
+      data={"from": "ACT LIFE <no-reply@act-life.co>",
         "to": ["", email],
-        "subject": "Reset Password",
+        "subject": "Quên mật khẩu",
         "html": html})
 
 @auth_ctrl.route('/login', methods=['GET', 'POST'])
@@ -227,6 +226,7 @@ def ResendActivationEmail():
 
 @auth_ctrl.route('/reset-password', methods=['GET', 'POST'])
 def forgot_password():
+    mail_reset_pass('trungdoanict@gmail.com', 'password_new')
     error = None
     if session.get('logged_in') is not None:
         return redirect('/account/dashboard')
@@ -258,7 +258,7 @@ def forgot_password():
                     
                     password_new = set_password(password_new_generate)
                     db.users.update({ "username" : user.username }, { '$set': { "password": password_new } })
-                    #mail_reset_pass(user.email, user.username, password_new_generate)
+                    mail_reset_pass(user.email, password_new_generate)
                     flash({'msg':'Một mật khẩu mới đã được gửi đến địa chỉ email của bạn. Nếu bạn không nhận được email, vui lòng chờ một vài phút', 'type':'success'})
                     print password_new_generate
                     return redirect('/user/login')
