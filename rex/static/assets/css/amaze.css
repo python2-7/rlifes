@@ -5493,7 +5493,7 @@ star {
 .table-striped > thead > tr > th{
   padding: 7px 8px;
     border: 1px solid #eee;
-    background: #dc8932;
+    background: #2ac7d0;
         color: #fff;
 }
 
@@ -6177,7 +6177,7 @@ star {
   .card[data-color="green"] {
     background: #d5e5a3; }
     .card[data-color="navy"] {
-       background: linear-gradient(to right, rgb(139, 80, 29) 0%, #FF5722 100%); color: #ffffff }
+       background: linear-gradient(to right, rgb(42, 199, 208) 0%, #488de4 100%); color: #ffffff }
      .card[data-color="mediumaquamarine"] {
     background: linear-gradient(to right, rgb(26, 29, 53) 0%, rgb(138, 88, 15) 100%); color: #ffffff }
     .card[data-color="yellowgreen"] {
@@ -11042,7 +11042,7 @@ be a descendant of the grid when it is being dragged.
     font-size: 20px;
 }
 .register-page, .login-page{
-      background: #4CAF50;
+      background: #00BCD4;
   background-size: cover;
 }
 .register-page .card, .register-page h2, .login-page .card, .login-page h2{

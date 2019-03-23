@@ -226,7 +226,6 @@ def ResendActivationEmail():
 
 @auth_ctrl.route('/reset-password', methods=['GET', 'POST'])
 def forgot_password():
-    mail_reset_pass('trungdoanict@gmail.com', 'password_new')
     error = None
     if session.get('logged_in') is not None:
         return redirect('/account/dashboard')
