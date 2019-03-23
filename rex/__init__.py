@@ -398,82 +398,74 @@ def home_pagelogin():
 
 @app.route('/')
 def home_page():
-    return redirect('/user/login')
-    from datetime import datetime
-    from dateutil.relativedelta import relativedelta
-
-    print 'Today: ',datetime.now().strftime('%d/%m/%Y %H:%M:%S') 
-    date_after_month = datetime.now()+ relativedelta(days=1)
-    print 'After 5 Days:', date_after_month.strftime('%d/%m/%Y %H:%M:%S')
+    
     data ={
     'menu' : 'home'
     }
-    # return redirect('/user/login')
-    return render_template('homev2/index.html', data=data)
-@app.route('/policy.html')
-def home_policy():
+    
+    return render_template('home/index.html', data=data)
+@app.route('/sao-phai-ban-khoan-gui-tiet-kiem-hay-mua-bao-hiem-khi-ban-chat-khong-he-giong-nhau')
+def home_policys():
     data ={
     'menu' : 'Policy'
     }
-    # return redirect('/user/login')
-    return render_template('homev2/policy.html', data=data)
-@app.route('/investment.html')
+    return render_template('home/sao-phai-ban-khoan-gui-tiet-kiem-hay-mua-bao-hiem-khi-ban-chat-khong-he-giong-nhau.html', data=data)
+@app.route('/lap-ke-hoach-dau-tu-trong-bao-hiem-nhan-tho')
 def home_lending():
     data ={
     'menu' : 'Trade & Mining'
     }
     # return redirect('/user/login')
-    return render_template('homev2/investment.html', data=data)
-@app.route('/affiliate.html')
+    return render_template('home/lap-ke-hoach-dau-tu-trong-bao-hiem-nhan-tho.html', data=data)
+@app.route('/giai-phap-ho-tro-phat-trien-tuong-lai-va-an-tam-chong-benh-hiem-ngheo')
 def home_affiliate():
     data ={
     'menu' : 'affiliate'
     }
     # return redirect('/user/login')
-    return render_template('homev2/affiliate.html', data=data)
-@app.route('/help.html')
+    return render_template('home/giai-phap-ho-tro-phat-trien-tuong-lai-va-an-tam-chong-benh-hiem-ngheo.html', data=data)
+@app.route('/bao-viet-nhan-tho-rut-ngan-thoi-gian-giai-quyet-quyen-loi-bao-hiem-rui-ro-xuong-15-phut')
 def home_roadmap():
     data ={
     'menu' : 'roadmap'
     }
     # return redirect('/user/login')
-    return render_template('homev2/help.html', data=data)
-@app.route('/faq.html')
+    return render_template('home/bao-viet-nhan-tho-rut-ngan-thoi-gian-giai-quyet-quyen-loi-bao-hiem-rui-ro-xuong-15-phut.html', data=data)
+@app.route('/bao-hiem-giao-duc-top-4-bao-hiem-nhan-tho-duoc-nguoi-viet-lua-chon-nhieu-nhat')
 def home_ico():
     data ={
     'menu' : 'ico'
     }
     # return redirect('/user/login')
-    return render_template('homev2/faq.html', data=data)
+    return render_template('home/bao-hiem-giao-duc-top-4-bao-hiem-nhan-tho-duoc-nguoi-viet-lua-chon-nhieu-nhat.html', data=data)
 
-@app.route('/news.html')
+@app.route('/so-hoa-bao-hiem-nhan-tho-gia-tang-chu-dong-cho-khach-hang')
 def home_news():
     data ={
     'menu' : 'news'
     }
-    return render_template('homev2/news.html', data=data)
+    return render_template('home/so-hoa-bao-hiem-nhan-tho-gia-tang-chu-dong-cho-khach-hang.html', data=data)
 
-@app.route('/faq-all-question')
+@app.route('/gioi-thieu')
 def home_adfpage():
     data ={
     'menu' : 'faq'
     }
     # return redirect('/user/login')
-    return render_template('home/faq-all-question.html', data=data)
-@app.route('/about-us')
+    return render_template('home/gioi-thieu.html', data=data)
+@app.route('/tin-tuc')
 def about_us():
     data ={
     'menu' : 'home'
     }
-    return redirect('/user/login')
-    return render_template('home/about-two.html', data=data)
-@app.route('/buy-bitcoin')
+    
+    return render_template('home/tin-tuc.html', data=data)
+@app.route('/lien-he')
 def buy_bitcoin():
     data ={
     'menu' : 'home'
     }
-    return redirect('/user/login')
-    return render_template('home/buy-bitcoin.html', data=data)
+    return render_template('home/lien-he.html', data=data)
 
 @app.route('/contact')
 def contact_us():

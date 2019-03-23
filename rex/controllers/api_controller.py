@@ -69,31 +69,99 @@ def check_password(pw_hash, password):
 def set_password(password):
     return generate_password_hash(password)
 
+def add_customer(datas,p_binary,position):
+    customer = db.users.insert(datas)
+    customer = db.User.find_one({'_id': ObjectId(customer)})
+    if str(position)== 'left':
+        db.users.update({"customer_id": p_binary}, { "$set": { "left":customer.customer_id} })
+    else:
+        db.users.update({"customer_id": p_binary}, { "$set": { "right":customer.customer_id} })
+            
+    return customer
+
 @api_ctrl.route('/register', methods=['GET', 'POST'])
 def register():
     dataDict = json.loads(request.data)
+
+    fullname_code = dataDict['fullname'].lower()
+
+    fullnamess = fullname_code.split(' ')
+    fullname = ''
+    for i in range(0,len(fullnamess)):
+      fullname += fullnamess[i].capitalize()+" "
+  
     email = dataDict['email'].lower()
-    telephone = dataDict['telephone']
-    fullname = dataDict['fullname'].upper()
-    password = dataDict['password'].lower()
+    address = dataDict['address']
+    password = dataDict['password']
     p_node = dataDict['p_node']
     p_binary = dataDict['p_binary']
+    telephone = dataDict['telephone']
+    cmnd = dataDict['cmnd']
+    birthday = dataDict['birthday']
+    account_horder = dataDict['account_horder'].upper()
+    account_number = dataDict['account_number']
+    bankname = dataDict['bankname']
+    brandname = dataDict['brandname']
     position = dataDict['position']
-    
+    localtime = time.localtime(time.time())
+    code_active = id_generator()
+    customer_id = '%s%s%s%s%s%s'%(localtime.tm_mon,localtime.tm_year,localtime.tm_mday,localtime.tm_hour,localtime.tm_min,localtime.tm_sec)
     check_email = db.User.find_one({'email': email})
-    if check_email is not None and email != '':
-      return json.dumps({
-          'status': 'error', 
-          'message': 'Email đã được sử dụng. Vui lòng nhập email khác.' 
-      })
+    if check_email is not None:
+        return json.dumps({
+            'status': 'error', 
+            'message': 'Email đã được sử dụng. Vui lòng nhập email khác.' 
+        })
     else:
-      customer_id = create_account(email,telephone,fullname,password,p_node,p_binary,position)
+        datas = {
+          'customer_id' : customer_id,
+          'username': email,
+          'password': set_password(password),
+          'email': email,
+          'fullname' : fullname,
+          'telephone' : telephone,
+          'p_node': p_node,
+          'password_transaction' : '',
+          'p_binary': p_binary,
+          'left': '',
+          'right': '',
+          'level': 0,
+          'level_dh': 0,
+          'creation': datetime.utcnow(),
+          'total_pd_left' : 0,
+          'total_pd_right' : 0,
+          'max_out' : 0,
+          'total_earn' : 0,
+          'total_invest': 0,
+          'total_node' : 0,
+          'status' : 0,
+          'code_active' : code_active,
+          'total_max_out': 0,
+          'investment' : 0,
+          'active_email' : 0,
+          'total_receive' : 0,
+          'total_pd_lefts' : 0,
+          'total_pd_rights' : 0,
+          'th_wallet' : 0,
+          'dh_wallet' : 0,
+          'n_wallet' : 0,
+          'ch_wallet' :0,
+          'balance_wallet' : 0,
+          'address' : address,
+          'cmnd' : cmnd,
+          'birthday' : birthday,
+          'account_horder' : account_horder,
+          'account_number' : account_number,
+          'bankname' : bankname,
+          'brandname' : brandname
+        }
+        add_customer(datas,p_binary,position)
 
-      return json.dumps({
+        return json.dumps({
           'status': 'complete', 
           'customer_id' : customer_id,
           'message': 'Thêm thành viên thành công.' 
-      })
+        })
 
 
 @api_ctrl.route('/get-member', methods=['GET', 'POST'])
@@ -418,21 +486,21 @@ def get_infomation_user():
 
 
     percent_nhom = 0
-    if float(user['total_node']) >= 10000000:
+    if float(user['total_node']) >= 100:
       percent_nhom = 8
-      max_out_level = 50000000
-    if float(user['total_node']) >= 20000000:
+      max_out_level = 500
+    if float(user['total_node']) >= 200:
       percent_nhom = 9
-      max_out_level = 100000000
-    if float(user['total_node']) >= 30000000:
+      max_out_level = 1000
+    if float(user['total_node']) >= 300:
       percent_nhom = 10
-      max_out_level = 200000000
-    if float(user['total_node']) >= 40000000:
+      max_out_level = 2000
+    if float(user['total_node']) >= 400:
       percent_nhom = 11
-      max_out_level = 400000000
-    if float(user['total_node']) >= 50000000:
+      max_out_level = 4000
+    if float(user['total_node']) >= 500:
       percent_nhom = 12
-      max_out_level = 500000000
+      max_out_level = 5000
 
     query_history = db.historys.find({'$and' : [ {'type': {'$regex': 'hoahongcannhanh'}},{'uid' : customer_id},
       {"date_added" : {
@@ -890,58 +958,6 @@ def get_version_app():
         'version': '1' 
     })
 
-
-
-
-def create_account(email,telephone,fullname,password,p_node,p_binary,position):
-    localtime = time.localtime(time.time())
-    customer_id = '%s%s%s%s%s%s'%(localtime.tm_mon,localtime.tm_year,localtime.tm_mday,localtime.tm_hour,localtime.tm_min,localtime.tm_sec)
-    code_active = id_generator()
-    print code_active
-    datas = {
-        'customer_id' : customer_id,
-        'username': email,
-        'password': set_password(password),
-        'email': email,
-        'fullname' : fullname,
-        'telephone' : telephone,
-        'p_node': p_node,
-        'password_transaction' : '',
-        'p_binary': p_binary,
-        'left': '',
-        'right': '',
-        'level': 0,
-        'level_dh': 0,
-        'creation': datetime.utcnow(),
-        'total_pd_left' : 0,
-        'total_pd_right' : 0,
-        'max_out' : 0,
-        'total_earn' : 0,
-        'total_invest': 0,
-        'total_node' : 0,
-        'status' : 0,
-        'code_active' : code_active,
-        'total_max_out': 0,
-        'investment' : 0,
-        'active_email' : 0,
-        'birthday' :'',
-        'total_receive' : 0,
-        'total_pd_lefts' : 0,
-        'total_pd_rights' : 0,
-        'th_wallet' : 0,
-        'dh_wallet' : 0,
-        'n_wallet' : 0,
-        'ch_wallet' :0,
-        'balance_wallet' : 0
-    }
-    customer = db.users.insert(datas)
-    if position == 'left':
-        db.users.update({"customer_id": p_binary}, { "$set": { "left":customer_id} })
-    else:
-        db.users.update({"customer_id": p_binary}, { "$set": { "right":customer_id} })
-            
-    #send_mail_register(code_active,email)
-    return customer_id
 
 
 

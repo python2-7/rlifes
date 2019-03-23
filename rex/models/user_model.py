@@ -47,7 +47,6 @@ class User(Document):
         'ch_wallet' :float,
         'address' : unicode,
         'cmnd' : unicode,
-        'birthday' : unicode,
         'account_horder' : unicode,
         'account_number' : unicode,
         'bankname' : unicode,

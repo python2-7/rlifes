@@ -94,21 +94,21 @@ def dashboard():
 
 		max_out_level = 0
 		percent_nhom = 0
-		if float(user['total_node']) >= 10000000:
+		if float(user['total_node']) >= 100:
 			percent_nhom = 8
-			max_out_level = 50000000
-		if float(user['total_node']) >= 20000000:
+			max_out_level = 500
+		if float(user['total_node']) >= 200:
 			percent_nhom = 9
-			max_out_level = 100000000
-		if float(user['total_node']) >= 30000000:
+			max_out_level = 1000
+		if float(user['total_node']) >= 300:
 			percent_nhom = 10
-			max_out_level = 200000000
-		if float(user['total_node']) >= 40000000:
+			max_out_level = 2000
+		if float(user['total_node']) >= 400:
 			percent_nhom = 11
-			max_out_level = 400000000
-		if float(user['total_node']) >= 50000000:
+			max_out_level = 4000
+		if float(user['total_node']) >= 500:
 			percent_nhom = 12
-			max_out_level = 500000000
+			max_out_level = 5000
 
 		if int(user['level']) == 0:
 			danhhieu = 'Thành viên miễn phí'
