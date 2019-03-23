@@ -231,7 +231,6 @@ def forgot_password():
     if session.get('logged_in') is not None:
         return redirect('/account/dashboard')
     if request.method == 'POST':
-        print 1111111
         email = request.form['email']
         recaptcha = request.form['g-recaptcha-response']
         if email and recaptcha:
@@ -250,9 +249,9 @@ def forgot_password():
             response = json.loads(response)
             emailss = email.lower()
             if response['success']:
-                user = db.User.find_one({ 'username': emailss })
+                user = db.User.find_one({ 'email': emailss })
                 if user is None:
-                    flash({'msg':'ID của bạn không tồn tại', 'type':'danger'})
+                    flash({'msg':'Email của bạn không tồn tại', 'type':'danger'})
                     return redirect('/auth/reset-password')
                 else:
                     password_new_generate = id_generator()
@@ -261,13 +260,13 @@ def forgot_password():
                     db.users.update({ "username" : user.username }, { '$set': { "password": password_new } })
                     #mail_reset_pass(user.email, user.username, password_new_generate)
                     flash({'msg':'Một mật khẩu mới đã được gửi đến địa chỉ email của bạn. Nếu bạn không nhận được email, vui lòng chờ một vài phút', 'type':'success'})
-                    
+                    print password_new_generate
                     return redirect('/user/login')
             else:
                 flash({'msg':'Xác thực không hợp lệ! Vui lòng thử lại', 'type':'danger'})
                 return redirect('/auth/reset-password')
         else:
-            flash({'msg':'ID của bạn không tồn tại', 'type':'danger'})
+            flash({'msg':'Email của bạn không tồn tại', 'type':'danger'})
             return redirect('/auth/reset-password')
     return render_template('reset-password.html', error=error)
 @auth_ctrl.route('/update_password/<emails>', methods=['GET', 'POST'])
