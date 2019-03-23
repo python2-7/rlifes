@@ -532,11 +532,7 @@ def get_infomation_user():
       danhhieu = 'VIP'
 
     if user is not None:
-      if str(user['birthday']) == '':
-        date_birthday = ''
-      else:
-        date_birthday = (user['birthday']).strftime('%d/%m/%Y')
-
+      
       if str(user['password_transaction']) == '':
         status_password_transaction = False
       else:
@@ -549,7 +545,7 @@ def get_infomation_user():
           'date_added' : (user['creation']).strftime('%H:%M %d-%m-%Y'),
           'fullname': user['fullname'],
           'telephone' : user['telephone'],
-          'birthday' :  date_birthday,
+          'birthday' :  '',
           'total_pd_left' : user['total_pd_left'],
           'total_pd_right' : user['total_pd_right'],
           'total_pd_lefts' : user['total_pd_lefts'],
