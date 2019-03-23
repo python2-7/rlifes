@@ -486,6 +486,7 @@ def get_infomation_user():
 
 
     percent_nhom = 0
+    max_out_level = 0
     if float(user['total_node']) >= 100:
       percent_nhom = 8
       max_out_level = 500
