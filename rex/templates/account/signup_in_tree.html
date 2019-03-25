@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="/static/assets/img/favicon.png" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge" >
 
-    <title>Đăng ký thành viên | IOT</title>
+    <title>Đăng ký thành viên | ACTLIFE</title>
     <link rel="icon" type="image/x-icon" href="/static/home/images/logo/logo.png">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport' >
     <meta name="viewport" content="width=device-width" >
@@ -37,9 +37,21 @@
         <div class="col-md-8 col-md-push-2">
 
             <form id="frmRegister" action="/user/registersubmit_intree" method="POST">
-              <a href="/account/personal" class="btn btn-warning">
+                <a href="/account/personal" class="btn btn-warning pull-left">
                     Quay lại
                 </a>
+                
+                <div class="pull-right" style="min-width: 70%; text-align: right;">
+                  
+                  <p class="url" id="url_ref" style="line-height: 120%;     width: 100%;float:left; border: 2px solid #fff;border-radius: 0px; float: right;position: relative;">
+                  <input style="color: #f6873a; background: none;    border: none;font-size: 15px;" id="copyTarget" class="form-control" name="refferal_link" type="text" value="https://act-life.co/user/new/{{data.position}}/{{data.p_binary}}/{{data.uid}}" readonly> 
+                  <button style="position: absolute;right: 0; top: 0" id="copyButton" class="btn btn-default btn-copy btn  copy" data-clipboard-action="copy" data-clipboard-target="#refferal_link" type="button"><i class="fa fa-clipboard" aria-hidden="true"></i> Sao chép</button></p>
+                  
+                  
+                   
+               </div>
+                <div class="clearfix"></div>
+              
               <p class="legend">Đăng ký tài khoản</p>
               
                 <div class="card card-plain">
