@@ -234,8 +234,8 @@ def forgot_password():
         recaptcha = request.form['g-recaptcha-response']
         if email and recaptcha:
             api_url     = 'https://www.google.com/recaptcha/api/siteverify';
-            site_key    = '6LcESjUUAAAAAN0l4GsSiE2cLLZLZQSRZsEdSroE';
-            secret_key  = '6LcESjUUAAAAAGsX2iLiwlnbBUyUsZXTz7jrPfAX';
+            site_key    = '6LfoRZoUAAAAAOBCK9vf_SEgpGgrrG4I0LMD5iGY';
+            secret_key  = '6LfoRZoUAAAAAIh-m-V73u9uCtC0I20_OH4tGq79';
             
             site_key_post = recaptcha
 
