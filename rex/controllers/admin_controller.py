@@ -160,14 +160,14 @@ def FnRefferalProgram(user_id, amount):
         if customer_node_1 is not None:
             #F1
             if float(customer_node_1['investment']) > 0:
-                ReceiveTrucHe(customer_node_1['customer_id'], amount,15,email_invest)
+                ReceiveTrucHe(customer_node_1['customer_id'], amount,12,email_invest)
 
             #F2
             customer_node_2 = db.users.find_one({"customer_id" : customer_node_1['p_node'] })
             if customer_node_2 is not None:
                 check_f1_node_2 = db.users.find({'$and' :[{"p_node" : customer_node_2['customer_id'] },{"investment": { "$gt": 0 }}]}).count()
                 if int(check_f1_node_2) >= 1 and float(customer_node_2['investment']) > 0:
-                    ReceiveTrucHe(customer_node_2['customer_id'], amount,2,email_invest)
+                    ReceiveTrucHe(customer_node_2['customer_id'], amount,1,email_invest)
 
 
                 #F3
@@ -199,7 +199,7 @@ def FnRefferalProgram(user_id, amount):
                             if customer_node_6 is not None:
                                 check_f1_node_6 = db.users.find({'$and' :[{"p_node" : customer_node_6['customer_id'] },{"investment": { "$gt": 0 }}]}).count()
                                 if int(check_f1_node_6) >= 5 and float(customer_node_6['investment']) > 0:
-                                    ReceiveTrucHe(customer_node_6['customer_id'], amount,2,email_invest)
+                                    ReceiveTrucHe(customer_node_6['customer_id'], amount,5,email_invest)
 
        
     return True
