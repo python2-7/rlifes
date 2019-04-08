@@ -160,7 +160,7 @@ def FnRefferalProgram(user_id, amount):
         if customer_node_1 is not None:
             #F1
             if float(customer_node_1['investment']) > 0:
-                ReceiveTrucHe(customer_node_1['customer_id'], amount,12,email_invest)
+                ReceiveTrucHe(customer_node_1['customer_id'], amount,8,email_invest)
 
             #F2
             customer_node_2 = db.users.find_one({"customer_id" : customer_node_1['p_node'] })
@@ -697,7 +697,13 @@ def ActiveInvestSubmit(customer_id):
         }
         db.deposits.insert(data_deposit)
         FnRefferalProgram(customer_id,amount)
-        db.users.update({ "_id" : ObjectId(customer['_id']) }, { '$set': {'investment' :amount} })
+
+        balance_wallet = float(customer['balance_wallet'])
+        new_balance_wallet = float(balance_wallet) + float(amount)*0.06
+        new_balance_wallet = float(new_balance_wallet)
+
+        db.users.update({ "_id" : ObjectId(customer['_id']) }, { '$set': {'investment' :amount,'balance_wallet' : new_balance_wallet} })
+        
         return redirect('/admin/customer')
     else:
         return redirect('/admin/customer')
